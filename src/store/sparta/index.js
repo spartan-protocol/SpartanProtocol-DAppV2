@@ -73,7 +73,7 @@ export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
       dispatch(updateGlobalDetails(globalDetails))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -92,7 +92,7 @@ export const fallenSpartansCheck = (wallet) => async (dispatch, getState) => {
       .result
     dispatch(updateClaimCheck(claimCheck.toString()))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -116,7 +116,7 @@ export const spartaUpgrade =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -138,7 +138,7 @@ export const fallenSpartansClaim = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'fsClaim', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -196,7 +196,7 @@ export const communityWalletHoldings =
       }
       dispatch(updateCommunityWallet(communityWallet))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }

@@ -103,7 +103,7 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
       dispatch(updateGlobalDetails(globalDetails))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -127,7 +127,7 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
 //         dispatch(updateMember(member))
 //       }
 //     } catch (error) {
-//       dispatch(updateError(error.reason))
+//       dispatch(updateError(error.reason ?? error.message ?? error))
 //     }
 //     dispatch(updateLoading(false))
 //   }
@@ -146,7 +146,7 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
 //       dispatch(updateSynthMinting(synthMinting))
 //     }
 //   } catch (error) {
-//     dispatch(updateError(error.reason))
+//     dispatch(updateError(error.reason ?? error.message ?? error))
 //   }
 //   dispatch(updateLoading(false))
 // }
@@ -183,7 +183,7 @@ export const getSynthDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(updateSynthDetails(synthDetails))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -225,7 +225,7 @@ export const synthVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -254,7 +254,7 @@ export const synthDeposit =
       dispatch(updateTxn(txn))
       dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -281,7 +281,7 @@ export const synthHarvest =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -308,7 +308,7 @@ export const synthHarvestSingle =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -335,7 +335,7 @@ export const synthWithdraw =
       dispatch(updateTxn(txn))
       dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -359,7 +359,7 @@ export const createSynth = (token, signer) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'createSynth', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }

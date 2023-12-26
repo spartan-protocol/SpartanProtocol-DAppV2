@@ -53,7 +53,7 @@ export const getReservePOLDetails = () => async (dispatch, getState) => {
       dispatch(updatePolDetails(polDetails))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }

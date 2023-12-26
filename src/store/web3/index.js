@@ -138,7 +138,7 @@ export const addNetworkMM = () => async (dispatch, getState) => {
       })
       dispatch(updateAddedNetworkMM(addedNetworkMM))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
   } else {
     dispatch(
@@ -165,7 +165,7 @@ export const addNetworkBC = () => async (dispatch, getState) => {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(updateAddedNetworkBC(addedNetworkBC))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
   } else {
     dispatch(updateError('Do you have BinanceChain wallet installed?'))
@@ -196,7 +196,7 @@ export const getApproval =
       txn = await parseTxn(txn, 'approval', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -219,7 +219,7 @@ export const getAllowance1 =
         dispatch(updateAllowance1(allowance1.toString()))
       }
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -242,7 +242,7 @@ export const getAllowance2 =
         dispatch(updateAllowance2(allowance2.toString()))
       }
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -278,7 +278,7 @@ export const watchAsset =
         }
         dispatch(updateWatchingAsset(watchingAsset))
       } catch (error) {
-        dispatch(updateError(error.reason))
+        dispatch(updateError(error.reason ?? error.message ?? error))
       }
     } else {
       dispatch(updateError('Please connect your wallet first'))
@@ -298,7 +298,7 @@ export const getSpartaPrice = () => async (dispatch) => {
     )
     dispatch(updateSpartaPrice(spartaPrice.data['spartan-protocol-token'].usd))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -342,7 +342,7 @@ export const getSpartaPriceInternal = () => async (dispatch, getState) => {
       spartaPrice = Number(formatFromUnits(spartaPrice, 6))
       dispatch(updateSpartaPriceInternal(spartaPrice))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
   }
   dispatch(updateLoading(false))
@@ -358,7 +358,7 @@ export const getEventArray = (array) => async (dispatch) => {
     const eventArray = array
     dispatch(updateEventArray(eventArray))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -409,7 +409,7 @@ export const getRPCBlocks = () => async (dispatch, getState) => {
     // console.log(rpcs)
     dispatch(updateRpcs(rpcs))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -421,7 +421,7 @@ export const getGlobalMetrics = () => async (dispatch) => {
     const global = await callGlobalMetrics()
     dispatch(updateMetrics({ global, block }))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }

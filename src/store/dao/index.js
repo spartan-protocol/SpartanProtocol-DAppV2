@@ -98,7 +98,7 @@ export const daoGlobalDetails = () => async (dispatch, getState) => {
     }
     dispatch(updateGlobal(global))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
 }
 
@@ -127,7 +127,7 @@ export const daoVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -150,7 +150,7 @@ export const daoMemberDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(updateMember(member))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -192,7 +192,7 @@ export const getDaoDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(daoVaultWeight()) // Weight changing function, so we need to update weight calculations
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -237,7 +237,7 @@ export const daoProposalDetails =
         dispatch(updateProposal(proposal))
       }
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -273,7 +273,7 @@ export const daoDepositTimes = (walletAddr) => async (dispatch, getState) => {
       dispatch(updateLastDeposits(lastDeposits))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -315,7 +315,7 @@ export const proposalWeight = () => async (dispatch, getState) => {
       dispatch(updateProposalWeight(_proposalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -341,7 +341,7 @@ export const daoDeposit =
       dispatch(updateTxn(txn))
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -365,7 +365,7 @@ export const daoWithdraw =
       dispatch(updateTxn(txn))
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
   }
 
@@ -391,7 +391,7 @@ export const daoHarvest =
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails
       dispatch(daoMemberDetails(walletAddr)) // Update daoMemberDetails (daoVault lastHarvest)
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -416,7 +416,7 @@ export const newActionProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -440,7 +440,7 @@ export const newParamProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -467,7 +467,7 @@ export const newAddressProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -491,7 +491,7 @@ export const newGrantProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -513,7 +513,7 @@ export const voteProposal = (signer) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'voteProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -535,7 +535,7 @@ export const removeVote = (signer) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'removeVoteProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -557,7 +557,7 @@ export const pollVotes = (signer) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'pollVotes', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -579,7 +579,7 @@ export const cancelProposal = (signer) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'cancelProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -601,7 +601,7 @@ export const finaliseProposal = (signer) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'finaliseProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }

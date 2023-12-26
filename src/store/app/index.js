@@ -137,7 +137,7 @@ export const appAsset = (id, addr, type) => async (dispatch) => {
     try {
       dispatch(updateAsset({ id, addr, type }))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
   }
   dispatch(updateLoading(false))
@@ -151,7 +151,7 @@ export const appChainId = (chainId) => async (dispatch) => {
     const abis = chainId === 56 ? abisMN : abisTN
     dispatch(updateChainId({ chainId, addresses, abis }))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -170,7 +170,7 @@ export const appSettings =
       }
       dispatch(updateSettings(currentSetts))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -182,7 +182,7 @@ export const appAlertTimestamp = () => async (dispatch) => {
     const timeNow = BN(Date.now()).div(1000).toString()
     dispatch(updateAlertTimestamp(timeNow))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }

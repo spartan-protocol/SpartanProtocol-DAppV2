@@ -72,7 +72,7 @@ export const bondVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -110,7 +110,7 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(bondVaultWeight()) // Weight changing function, so we need to update weight calculations
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -134,7 +134,7 @@ export const claimBond =
       dispatch(updateTxn(txn))
       dispatch(getBondDetails(walletAddr)) // Update bondDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }

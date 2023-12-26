@@ -57,7 +57,7 @@ export const addLiquidity =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -90,7 +90,7 @@ export const addLiquiditySingle =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -120,7 +120,7 @@ export const zapLiquidity =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -146,7 +146,7 @@ export const removeLiquidityExact =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -176,7 +176,7 @@ export const removeLiquiditySingle =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -211,7 +211,7 @@ export const swap =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -243,7 +243,7 @@ export const swapAssetToSynth =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -272,7 +272,7 @@ export const swapSynthToAsset =
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -294,7 +294,7 @@ export const updatePoolStatus = (signer) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'unfreeze', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
