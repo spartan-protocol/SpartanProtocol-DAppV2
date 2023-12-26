@@ -205,26 +205,32 @@ export const getPoolDetails = (walletAddr) => async (dispatch, getState) => {
 export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { listedTokens } = getState().pool
+  console.log('debug listedTokens', listedTokens)
   try {
     if (listedTokens.length > 0) {
       const { rpcs } = getState().web3
       const { addresses, chainId } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
+      console.log('debug contract', contract)
       const awaitArray = (
         await contract.simulate.getTokenDetails([
           walletAddr ?? addresses.bnb,
           listedTokens,
         ])
       ).result
+      console.log('debug awaitArray', awaitArray)
 
       let symbUrls = []
       for (let i = 0; i < listedTokens.length; i++) {
+        console.log('debug getSymbolUrl', i, listedTokens[i])
         symbUrls.push(getSymbolUrl(addresses, listedTokens[i], chainId))
       }
       symbUrls = await Promise.all(symbUrls)
+      console.log('debug symbUrls', symbUrls)
 
       const tokenDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
+        console.log('debug tokenDetails[i]', i, listedTokens[i], awaitArray[i])
         tokenDetails.push({
           address: listedTokens[i],
           balance: awaitArray[i].balance.toString(),
@@ -235,6 +241,7 @@ export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
           symbolUrl: symbUrls[i],
         })
       }
+      console.log('debug tokenDetails', tokenDetails)
       dispatch(updatetokenDetails(tokenDetails))
       dispatch(getPoolDetails(walletAddr)) // Update poolDetails
       dispatch(getSynthDetails(walletAddr)) // Update synthDetails
