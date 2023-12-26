@@ -37,7 +37,7 @@ export const getReservePOLDetails = () => async (dispatch, getState) => {
   try {
     if (rpcs.length > 0) {
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = await contract.callStatic.getReserveHoldings()
+      const awaitArray = (await contract.simulate.getReserveHoldings()).result
       const polDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
         polDetails.push({

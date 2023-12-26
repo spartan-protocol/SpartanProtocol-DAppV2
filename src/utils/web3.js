@@ -1,4 +1,4 @@
-import { createWalletClient, decodeEventLog, getAddress, http } from 'viem'
+import { createPublicClient, decodeEventLog, getAddress, http } from 'viem'
 import { bsc, bscTestnet } from 'viem/chains'
 
 // Testnet ABI Imports
@@ -438,9 +438,9 @@ export const getChainId = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider, rpcUrls) => {
   const chainId = getChainId()
-  let client = createWalletClient({
+  let client = createPublicClient({
     chain: chainId === 97 ? bscTestnet : bsc,
-    transport: http(changeRpc(chainId, rpcUrls)),
+    transport: http(changeRpc(chainId, rpcUrls).url),
   }) // simple public provider unsigned
   if (_provider) client = _provider
   return client

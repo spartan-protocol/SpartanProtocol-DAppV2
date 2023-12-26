@@ -123,10 +123,12 @@ export const getPoolDetails = (walletAddr) => async (dispatch, getState) => {
       const _listedTokens = listedTokens.filter(
         (x) => !excludedArray.includes(x),
       )
-      const awaitArray = await contract.callStatic.getPoolDetails(
-        walletAddr ?? addresses.bnb,
-        _listedTokens,
-      )
+      const awaitArray = (
+        await contract.simulate.getPoolDetails([
+          walletAddr ?? addresses.bnb,
+          _listedTokens,
+        ])
+      ).result
 
       const poolDetails = []
 
@@ -208,10 +210,12 @@ export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
       const { rpcs } = getState().web3
       const { addresses, chainId } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = await contract.callStatic.getTokenDetails(
-        walletAddr ?? addresses.bnb,
-        listedTokens,
-      )
+      const awaitArray = (
+        await contract.simulate.getTokenDetails([
+          walletAddr ?? addresses.bnb,
+          listedTokens,
+        ])
+      ).result
 
       let symbUrls = []
       for (let i = 0; i < listedTokens.length; i++) {
@@ -252,7 +256,7 @@ export const getListedTokens = (walletAddr) => async (dispatch, getState) => {
       const { addresses } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
       const listedTokens = []
-      const _listedTokens = await contract.callStatic.getListedTokens()
+      const _listedTokens = (await contract.simulate.getListedTokens()).result
       for (let i = 0; i < _listedTokens.length; i++) {
         listedTokens.push(_listedTokens[i])
       }
@@ -279,7 +283,7 @@ export const getCuratedPools = () => async (dispatch, getState) => {
   try {
     if (rpcs.length > 0) {
       const contract = getSSUtilsContract(null, rpcs)
-      const curatedPools = await contract.callStatic.getCuratedPools()
+      const curatedPools = (await contract.simulate.getCuratedPools()).result
       dispatch(updateCuratedPools(curatedPools))
     }
   } catch (error) {
@@ -306,7 +310,10 @@ export const createPoolADD =
       // const gPrice = await getProviderGasPrice(rpcs)
       const _value = token === addresses.bnb ? inputToken : null
       const ORs = { value: _value, gasPrice: gPrice }
-      let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
+      let txn = await contract.write.createPoolADD(
+        [inputBase, inputToken, token],
+        ORs,
+      )
       txn = await parseTxn(txn, 'createPool', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getListedTokens(walletAddr)) // Update listedTokens -> poolDetails
