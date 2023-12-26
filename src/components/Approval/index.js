@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { useApp } from '../../store/app'
 import { usePool } from '../../store/pool'
 import {
@@ -39,7 +39,7 @@ const Approval = ({
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -50,7 +50,7 @@ const Approval = ({
 
   const handleApproval = async () => {
     setPending(true)
-    await dispatch(getApproval(tokenAddress, contractAddress, signer))
+    await dispatch(getApproval(tokenAddress, contractAddress, walletClient))
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
         dispatch(getAllowance1(tokenAddress, address, contractAddress))
@@ -77,7 +77,7 @@ const Approval = ({
     txnAmount,
     assetNumber,
     dispatch,
-    signer,
+    walletClient,
     address,
   ])
 

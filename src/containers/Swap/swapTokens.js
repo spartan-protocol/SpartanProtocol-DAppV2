@@ -11,7 +11,7 @@ import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { formatShortString } from '../../utils/web3'
 import { usePool } from '../../store/pool'
@@ -43,7 +43,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   const location = useLocation()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { addresses, asset1, asset2, settings } = useApp()
   const pool = usePool()
@@ -438,7 +438,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
         assetSwap2.tokenAddress,
         BN(getSwap[0]).times(minAmountFraction).toFixed(0, 1),
         address,
-        signer,
+        walletClient,
       ),
     )
     setTxnLoading(false)

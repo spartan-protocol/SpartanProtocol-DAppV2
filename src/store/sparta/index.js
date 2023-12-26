@@ -1,6 +1,7 @@
-import { ethers } from 'ethers'
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
+import { createPublicClient, getContract, http } from 'viem'
+import { bsc } from 'viem/chains'
 import {
   getFallenSpartansContract,
   getSpartaV2Contract,
@@ -58,7 +59,7 @@ export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
   try {
     if (rpcs.length > 0) {
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = (await contract.callStatic.getGlobalDetails())[0]
+      const awaitArray = (await contract.simulate.getGlobalDetails()).result[0]
       const globalDetails = {
         emitting: awaitArray.emitting,
         totalSupply: awaitArray.totalSupply.toString(),
@@ -72,7 +73,7 @@ export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
       dispatch(updateGlobalDetails(globalDetails))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -87,10 +88,11 @@ export const fallenSpartansCheck = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getFallenSpartansContract(null, rpcs)
   try {
-    const claimCheck = await contract.callStatic.getClaim(wallet.account)
+    const claimCheck = (await contract.simulate.getClaim([wallet.account]))
+      .result
     dispatch(updateClaimCheck(claimCheck.toString()))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -109,12 +111,12 @@ export const spartaUpgrade =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.upgrade({ gasPrice: gPrice })
+      let txn = await contract.write.upgrade([], { gasPrice: gPrice })
       txn = await parseTxn(txn, 'upgrade', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -132,11 +134,11 @@ export const fallenSpartansClaim = (wallet) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.claim({ gasPrice: gPrice })
+    let txn = await contract.write.claim([], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'fsClaim', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -149,47 +151,52 @@ export const communityWalletHoldings =
     dispatch(updateLoading(true))
     const comWal = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
     const { erc20 } = getState().app.abis
-    const provider = new ethers.providers.JsonRpcProvider(bscRpcsMN[0])
-    const spartaCont = new ethers.Contract(
-      addressesMN.spartav2,
-      erc20,
-      provider,
-    )
-    const busdCont = new ethers.Contract(
-      '0xe9e7cea3dedca5984780bafc599bd69add087d56',
-      erc20,
-      provider,
-    )
-    const usdtCont = new ethers.Contract(
-      '0x55d398326f99059ff775485246999027b3197955',
-      erc20,
-      provider,
-    )
+    const provider = createPublicClient({
+      chain: bsc,
+      transport: http(bscRpcsMN[0]),
+    })
+    const spartaCont = getContract({
+      abi: erc20,
+      address: addressesMN.spartav2,
+      publicClient: provider,
+    })
+    const busdCont = getContract({
+      abi: erc20,
+      address: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+      publicClient: provider,
+    })
+    const usdtCont = getContract({
+      abi: erc20,
+      address: '0x55d398326f99059ff775485246999027b3197955',
+      publicClient: provider,
+    })
     try {
       let awaitArray = [
-        spartaCont.callStatic.balanceOf(comWal),
-        busdCont.callStatic.balanceOf(comWal),
-        usdtCont.callStatic.balanceOf(comWal),
-        walletAddr ? spartaCont.callStatic.balanceOf(walletAddr) : '0',
-        walletAddr ? busdCont.callStatic.balanceOf(walletAddr) : '0',
-        walletAddr ? usdtCont.callStatic.balanceOf(walletAddr) : '0',
+        spartaCont.simulate.balanceOf({ args: [comWal] }),
+        busdCont.simulate.balanceOf({ args: [comWal] }),
+        usdtCont.simulate.balanceOf({ args: [comWal] }),
+        walletAddr
+          ? spartaCont.simulate.balanceOf({ args: [walletAddr] })
+          : '0',
+        walletAddr ? busdCont.simulate.balanceOf({ args: [walletAddr] }) : '0',
+        walletAddr ? usdtCont.simulate.balanceOf({ args: [walletAddr] }) : '0',
       ]
       awaitArray = await Promise.all(awaitArray)
       const communityWallet = {
         bnb: (await provider.getBalance(comWal)).toString(),
-        sparta: awaitArray[0].toString(),
-        busd: awaitArray[1].toString(),
-        usdt: awaitArray[2].toString(),
-        userSparta: awaitArray[3].toString(),
+        sparta: awaitArray[0].result.toString(),
+        busd: awaitArray[1].result.toString(),
+        usdt: awaitArray[2].result.toString(),
+        userSparta: awaitArray[3].result.toString(),
         userBnb: walletAddr
           ? (await provider.getBalance(walletAddr)).toString()
           : '0',
-        userBusd: awaitArray[4].toString(),
-        userUsdt: awaitArray[5].toString(),
+        userBusd: awaitArray[4].result.toString(),
+        userUsdt: awaitArray[5].result.toString(),
       }
       dispatch(updateCommunityWallet(communityWallet))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }

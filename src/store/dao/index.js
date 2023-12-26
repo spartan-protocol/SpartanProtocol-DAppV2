@@ -86,7 +86,7 @@ export const daoGlobalDetails = () => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getSSUtilsContract(null, rpcs)
   try {
-    const awaitArray = (await contract.callStatic.getDaoGlobalDetails())[0]
+    const awaitArray = (await contract.simulate.getDaoGlobalDetails()).result[0]
     const global = {
       running: awaitArray.running, // Dao proposals currently running?
       coolOffPeriod: awaitArray.coolOffPeriod.toString(), // Dao coolOffPeriod
@@ -98,7 +98,7 @@ export const daoGlobalDetails = () => async (dispatch, getState) => {
     }
     dispatch(updateGlobal(global))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
 }
 
@@ -127,7 +127,7 @@ export const daoVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -141,16 +141,16 @@ export const daoMemberDetails = (walletAddr) => async (dispatch, getState) => {
   try {
     if (walletAddr && rpcs.length > 0) {
       const contract = getDaoContract(null, rpcs)
-      const awaitArray = await contract.callStatic.mapMember_lastTime(
-        walletAddr,
-      )
+      const awaitArray = (
+        await contract.simulate.mapMember_lastTime([walletAddr])
+      ).result
       const member = {
         lastHarvest: awaitArray.toString(),
       }
       dispatch(updateMember(member))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -168,10 +168,12 @@ export const getDaoDetails = (walletAddr) => async (dispatch, getState) => {
       const { rpcs } = getState().web3
       const { addresses } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = await contract.callStatic.getDaoDetails(
-        walletAddr ?? addresses.bnb,
-        histCuratedPools,
-      )
+      const awaitArray = (
+        await contract.simulate.getDaoDetails([
+          walletAddr ?? addresses.bnb,
+          histCuratedPools,
+        ])
+      ).result
       const daoDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
         const pool = getPool(awaitArray[i].poolAddress, poolDetails)
@@ -190,7 +192,7 @@ export const getDaoDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(daoVaultWeight()) // Weight changing function, so we need to update weight calculations
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -206,9 +208,9 @@ export const daoProposalDetails =
         const contract = getDaoContract(null, rpcs)
         const awaitArray = []
         for (let i = 1; i <= currentProposal; i++) {
-          awaitArray.push(contract.callStatic.getProposalDetails(i))
+          awaitArray.push(contract.simulate.getProposalDetails([i]))
           awaitArray.push(
-            walletAddr ? contract.callStatic.memberVoted(i, walletAddr) : '0',
+            walletAddr ? contract.simulate.memberVoted([i, walletAddr]) : '0',
           )
         }
         const proposalArray = await Promise.all(awaitArray)
@@ -220,22 +222,22 @@ export const daoProposalDetails =
           i += varCount
         ) {
           proposal.push({
-            id: proposalArray[i].id.toString(),
-            proposalType: proposalArray[i].proposalType,
-            coolOffTime: proposalArray[i].coolOffTime.toString(), // timestamp of coolOff
-            finalising: proposalArray[i].finalising,
-            finalised: proposalArray[i].finalised,
-            param: proposalArray[i].param.toString(),
-            proposedAddress: proposalArray[i].proposedAddress.toString(),
-            open: proposalArray[i].open,
-            startTime: proposalArray[i].startTime.toString(), // timestamp of proposal genesis
-            memberVoted: proposalArray[i + 1],
+            id: proposalArray[i].result.id.toString(),
+            proposalType: proposalArray[i].result.proposalType,
+            coolOffTime: proposalArray[i].result.coolOffTime.toString(), // timestamp of coolOff
+            finalising: proposalArray[i].result.finalising,
+            finalised: proposalArray[i].result.finalised,
+            param: proposalArray[i].result.param.toString(),
+            proposedAddress: proposalArray[i].result.proposedAddress.toString(),
+            open: proposalArray[i].result.open,
+            startTime: proposalArray[i].result.startTime.toString(), // timestamp of proposal genesis
+            memberVoted: proposalArray[i + 1].result,
           })
         }
         dispatch(updateProposal(proposal))
       }
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -254,10 +256,10 @@ export const daoDepositTimes = (walletAddr) => async (dispatch, getState) => {
       let awaitArray = []
       for (let i = 0; i < loopPools.length; i++) {
         awaitArray.push(
-          contract.callStatic.getMemberPoolDepositTime(
+          contract.simulate.getMemberPoolDepositTime([
             loopPools[i].address,
             walletAddr,
-          ),
+          ]),
         )
       }
       awaitArray = await Promise.all(awaitArray)
@@ -265,13 +267,13 @@ export const daoDepositTimes = (walletAddr) => async (dispatch, getState) => {
       for (let i = 0; i < awaitArray.length; i++) {
         lastDeposits.push({
           address: loopPools[i].address,
-          lastDeposit: awaitArray[i].toString(),
+          lastDeposit: awaitArray[i].result.toString(),
         })
       }
       dispatch(updateLastDeposits(lastDeposits))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -293,19 +295,19 @@ export const proposalWeight = () => async (dispatch, getState) => {
         const awaitArray = []
         for (let i = 0; i < vaultPools.length; i++) {
           awaitArray.push(
-            contract.callStatic.getProposalAssetVotes(
+            contract.simulate.getProposalAssetVotes([
               currentProposal,
               vaultPools[i].address,
-            ),
+            ]),
           )
         }
         const votedArray = await Promise.all(awaitArray)
         for (let i = 0; i < votedArray.length; i++) {
           _proposalWeight = _proposalWeight.plus(
             getPoolShareWeight(
-              votedArray[i].toString(),
-              vaultPools[i].poolUnits,
-              vaultPools[i].baseAmount,
+              votedArray[i].result.toString(),
+              vaultPools[i].result.poolUnits,
+              vaultPools[i].result.baseAmount,
             ),
           )
         }
@@ -313,7 +315,7 @@ export const proposalWeight = () => async (dispatch, getState) => {
       dispatch(updateProposalWeight(_proposalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -332,12 +334,14 @@ export const daoDeposit =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.deposit(pool, amount, { gasPrice: gPrice })
+      let txn = await contract.write.deposit([pool, amount], {
+        gasPrice: gPrice,
+      })
       txn = await parseTxn(txn, 'daoDeposit', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -356,12 +360,12 @@ export const daoWithdraw =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.withdraw(pool, { gasPrice: gPrice })
+      let txn = await contract.write.withdraw([pool], { gasPrice: gPrice })
       txn = await parseTxn(txn, 'daoWithdraw', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
   }
 
@@ -379,13 +383,15 @@ export const daoHarvest =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.harvest({ gasPrice: gPrice })
+      let txn = await contract.write.harvest([], {
+        gasPrice: gPrice,
+      })
       txn = await parseTxn(txn, 'daoHarvest', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails
       dispatch(daoMemberDetails(walletAddr)) // Update daoMemberDetails (daoVault lastHarvest)
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -404,11 +410,13 @@ export const newActionProposal =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.newActionProposal(typeStr, { gasPrice: gPrice })
+      let txn = await contract.write.newActionProposal([typeStr], {
+        gasPrice: gPrice,
+      })
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -428,11 +436,11 @@ export const newParamProposal =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
-      let txn = await contract.newParamProposal(param, typeStr, ORs)
+      let txn = await contract.write.newParamProposal([param, typeStr], ORs)
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -452,11 +460,14 @@ export const newAddressProposal =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
-      let txn = await contract.newAddressProposal(proposedAddress, typeStr, ORs)
+      let txn = await contract.write.newAddressProposal(
+        [proposedAddress, typeStr],
+        ORs,
+      )
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -476,11 +487,11 @@ export const newGrantProposal =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
-      let txn = await contract.newGrantProposal(recipient, amount, ORs)
+      let txn = await contract.write.newGrantProposal([recipient, amount], ORs)
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -498,11 +509,11 @@ export const voteProposal = (signer) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.voteProposal({ gasPrice: gPrice })
+    let txn = await contract.write.voteProposal([], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'voteProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -520,11 +531,11 @@ export const removeVote = (signer) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.unvoteProposal({ gasPrice: gPrice })
+    let txn = await contract.write.unvoteProposal([], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'removeVoteProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -542,11 +553,11 @@ export const pollVotes = (signer) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.pollVotes({ gasPrice: gPrice })
+    let txn = await contract.write.pollVotes([], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'pollVotes', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -564,11 +575,11 @@ export const cancelProposal = (signer) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.cancelProposal({ gasPrice: gPrice })
+    let txn = await contract.write.cancelProposal([], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'cancelProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -586,11 +597,11 @@ export const finaliseProposal = (signer) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.finaliseProposal({ gasPrice: gPrice })
+    let txn = await contract.write.finaliseProposal([], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'finaliseProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }

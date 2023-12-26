@@ -72,7 +72,7 @@ export const bondVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -90,9 +90,9 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
       const { rpcs } = getState().web3
       const { addresses } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = await contract.callStatic.getBondDetails(
-        walletAddr ?? addresses.bnb,
-      )
+      const awaitArray = (
+        await contract.simulate.getBondDetails([walletAddr ?? addresses.bnb])
+      ).result
       const bondDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
         bondDetails.push({
@@ -110,7 +110,7 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(bondVaultWeight()) // Weight changing function, so we need to update weight calculations
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -129,12 +129,12 @@ export const claimBond =
       const { chainId } = getState().app
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
-      let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
+      let txn = await contract.write.claim([tokenAddr], { gasPrice: gPrice })
       txn = await parseTxn(txn, 'bondClaim', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getBondDetails(walletAddr)) // Update bondDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }

@@ -12,7 +12,7 @@ import Badge from 'react-bootstrap/Badge'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Form from 'react-bootstrap/Form'
 import Popover from 'react-bootstrap/Popover'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { formatShortString, oneWeek } from '../../utils/web3'
 import { usePool } from '../../store/pool'
@@ -49,7 +49,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   const location = useLocation()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { addresses, asset1, asset2 } = useApp()
   const pool = usePool()
@@ -389,7 +389,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
         assetSwap1.address,
         assetSwap2.address,
         address,
-        signer,
+        walletClient,
       ),
     )
     setTxnLoading(false)

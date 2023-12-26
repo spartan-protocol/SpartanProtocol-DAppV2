@@ -8,8 +8,8 @@ import Row from 'react-bootstrap/Row'
 import FormControl from 'react-bootstrap/FormControl'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
-import { ethers } from 'ethers'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
+import { parseEther } from 'viem'
 import { formatShortString } from '../../utils/web3'
 import { useSparta, communityWalletHoldings } from '../../store/sparta'
 import {
@@ -29,7 +29,7 @@ const Overview = () => {
   const sparta = useSparta()
   const app = useApp()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
   const web3 = useWeb3()
 
   const [txnLoading, setTxnLoading] = useState(false)
@@ -148,43 +148,43 @@ const Overview = () => {
     const asset = getAsset(selectedAsset)
     if (asset.symbol === 'BNB') {
       // const signer = getWalletProvider(wallet?.library, web3.rpcs)
-      await signer.sendTransaction({
+      await walletClient.sendTransaction({
         to: communityWallet,
-        value: ethers.utils.parseEther(inputDonation?.value),
+        value: parseEther(inputDonation?.value),
       })
     }
     if (asset.symbol === 'BUSD') {
       const contract = getTokenContract(
         getAsset('BUSD').addr,
-        signer,
+        walletClient,
         web3.rpcs,
       )
-      await contract.transfer(
+      await contract.write.transfer([
         communityWallet,
         convertToWei(inputDonation?.value),
-      )
+      ])
     }
     if (asset.symbol === 'USDT') {
       const contract = getTokenContract(
         getAsset('USDT').addr,
-        signer,
+        walletClient,
         web3.rpcs,
       )
-      await contract.transfer(
+      await contract.write.transfer([
         communityWallet,
         convertToWei(inputDonation?.value),
-      )
+      ])
     }
     if (asset.symbol === 'SPARTA') {
       const contract = getTokenContract(
         getAsset('SPARTA').addr,
-        signer,
+        walletClient,
         web3.rpcs,
       )
-      await contract.transfer(
+      await contract.write.transfer([
         communityWallet,
         convertToWei(inputDonation?.value),
-      )
+      ])
     }
     setTxnLoading(false)
   }

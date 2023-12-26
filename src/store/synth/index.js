@@ -82,28 +82,28 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
     if (rpcs.length > 0) {
       const contract = getSynthVaultContract(null, rpcs)
       let awaitArray = [
-        contract.callStatic.minimumDepositTime(),
-        contract.callStatic.erasToEarn(),
-        contract.callStatic.vaultClaim(),
-        contract.callStatic.genesis(),
-        // contract.callStatic.map30DVaultRevenue(),
-        // contract.callStatic.mapPast30DVaultRevenue(),
-        getSynthFactoryContract(null, rpcs).callStatic.synthCount(),
+        contract.simulate.minimumDepositTime(),
+        contract.simulate.erasToEarn(),
+        contract.simulate.vaultClaim(),
+        contract.simulate.genesis(),
+        // contract.simulate.map30DVaultRevenue(),
+        // contract.simulate.mapPast30DVaultRevenue(),
+        getSynthFactoryContract(null, rpcs).simulate.synthCount(),
       ]
       awaitArray = await Promise.all(awaitArray)
       const globalDetails = {
-        minTime: awaitArray[0].toString(),
-        erasToEarn: awaitArray[1].toString(),
-        vaultClaim: awaitArray[2].toString(),
-        genesis: awaitArray[3].toString(),
-        // recentRevenue: awaitArray[].toString(),
-        // lastMonthRevenue: awaitArray[].toString(),
-        synthCount: awaitArray[4].toString(),
+        minTime: awaitArray[0].result.toString(),
+        erasToEarn: awaitArray[1].result.toString(),
+        vaultClaim: awaitArray[2].result.toString(),
+        genesis: awaitArray[3].result.toString(),
+        // recentRevenue: awaitArray[].result.toString(),
+        // lastMonthRevenue: awaitArray[].result.toString(),
+        synthCount: awaitArray[4].result.toString(),
       }
       dispatch(updateGlobalDetails(globalDetails))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -119,15 +119,15 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
 //     try {
 //       if (walletAddr && rpcs.length > 0) {
 //         const contract = getSynthVaultContract(null, rpcs)
-//         let awaitArray = [contract.callStatic.mapMember_depositTime(walletAddr)]
+//         let awaitArray = [contract.simulate.mapMember_depositTime({args:[walletAddr]})]
 //         awaitArray = await Promise.all(awaitArray)
 //         const member = {
-//           depositTime: awaitArray[0].toString(),
+//           depositTime: awaitArray[0].result.toString(),
 //         }
 //         dispatch(updateMember(member))
 //       }
 //     } catch (error) {
-//       dispatch(updateError(error.reason))
+//       dispatch(updateError(error.reason ?? error.message ?? error))
 //     }
 //     dispatch(updateLoading(false))
 //   }
@@ -142,11 +142,11 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
 //   try {
 //     if (rpcs.length > 0) {
 //       const contract = getRouterContract(null, rpcs)
-//       const synthMinting = await contract.callStatic.synthMinting()
+//       const synthMinting = (await contract.simulate.synthMinting()).result
 //       dispatch(updateSynthMinting(synthMinting))
 //     }
 //   } catch (error) {
-//     dispatch(updateError(error.reason))
+//     dispatch(updateError(error.reason ?? error.message ?? error))
 //   }
 //   dispatch(updateLoading(false))
 // }
@@ -164,26 +164,26 @@ export const getSynthDetails = (walletAddr) => async (dispatch, getState) => {
       const { rpcs } = getState().web3
       const contract = getSSUtilsContract(null, rpcs)
 
-      const awaitArray = await contract.callStatic.getSynthDetails(
+      const awaitArray = await contract.simulate.getSynthDetails([
         walletAddr ?? addresses.bnb,
         synthTokens,
-      )
+      ])
       const synthDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
         synthDetails.push({
           tokenAddress: synthTokens[i],
-          address: awaitArray[i].synthAddress,
-          balance: awaitArray[i].balance.toString(),
-          staked: awaitArray[i].staked.toString(),
+          address: awaitArray[i].result.synthAddress,
+          balance: awaitArray[i].result.balance.toString(),
+          staked: awaitArray[i].result.staked.toString(),
           lastHarvest: '0', // awaitArray[i].toString(),
-          lpBalance: awaitArray[i].collateral.toString(),
-          totalSupply: awaitArray[i].totalSupply.toString(),
+          lpBalance: awaitArray[i].result.collateral.toString(),
+          totalSupply: awaitArray[i].result.totalSupply.toString(),
         })
       }
       dispatch(updateSynthDetails(synthDetails))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -208,14 +208,14 @@ export const synthVaultWeight = () => async (dispatch, getState) => {
         const awaitArray = []
         for (let i = 0; i < vaultPools.length; i++) {
           awaitArray.push(
-            contract.callStatic.mapTotalSynth_balance(vaultPools[i].address),
+            contract.simulate.mapTotalSynth_balance([vaultPools[i].address]),
           )
         }
         const totalStaked = await Promise.all(awaitArray)
         for (let i = 0; i < totalStaked.length; i++) {
           totalWeight = totalWeight.plus(
             calcSpotValueInBase(
-              totalStaked[i].toString(),
+              totalStaked[i].result.toString(),
               getPool(vaultPools[i].tokenAddress, poolDetails),
             ),
           )
@@ -225,7 +225,7 @@ export const synthVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight))
     }
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
@@ -247,12 +247,14 @@ export const synthDeposit =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
+      let txn = await contract.write.deposit([synth, amount], {
+        gasPrice: gPrice,
+      })
       txn = await parseTxn(txn, 'synthDeposit', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -272,12 +274,14 @@ export const synthHarvest =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
+      let txn = await contract.write.harvestAll([synthArray], {
+        gasPrice: gPrice,
+      })
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -297,12 +301,14 @@ export const synthHarvestSingle =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
+      let txn = await contract.write.harvestSingle([synth], {
+        gasPrice: gPrice,
+      })
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -324,12 +330,12 @@ export const synthWithdraw =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
-      let txn = await contract.withdraw(synth, basisPoints, ORs)
+      let txn = await contract.write.withdraw([synth, basisPoints], ORs)
       txn = await parseTxn(txn, 'synthWithdraw', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     } catch (error) {
-      dispatch(updateError(error.reason))
+      dispatch(updateError(error.reason ?? error.message ?? error))
     }
     dispatch(updateLoading(false))
   }
@@ -349,11 +355,11 @@ export const createSynth = (token, signer) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.createSynth(token, { gasPrice: gPrice })
+    let txn = await contract.write.createSynth([token], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'createSynth', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
