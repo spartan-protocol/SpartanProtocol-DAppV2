@@ -210,12 +210,18 @@ export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
       const { rpcs } = getState().web3
       const { addresses, chainId } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = (
-        await contract.simulate.getTokenDetails([
-          walletAddr ?? addresses.bnb,
-          listedTokens,
-        ])
-      ).result
+      console.log('debug contract', contract)
+      console.log(
+        'debug walletAddr ?? addresses.bnb',
+        walletAddr ?? addresses.bnb,
+      )
+      const tempArray = await contract.simulate.getTokenDetails([
+        walletAddr ?? addresses.bnb,
+        listedTokens,
+      ])
+      console.log('debug tempArray', tempArray)
+      const awaitArray = tempArray.result
+      console.log('debug awaitArray', awaitArray)
 
       let symbUrls = []
       for (let i = 0; i < listedTokens.length; i++) {
@@ -241,7 +247,7 @@ export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
     }
   } catch (error) {
     console.log('debug error', error)
-    dispatch(updateError(error.reason))
+    dispatch(updateError(error.reason ?? error.message ?? error))
   }
   dispatch(updateLoading(false))
 }
