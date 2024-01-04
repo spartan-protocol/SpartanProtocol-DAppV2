@@ -14,9 +14,13 @@ const Friends = () => (
         <Col key={item.name} className="my-2" lg="4" md="6" sm="12">
           <Card>
             <Card.Header className="text-center">
-              <Icon icon={item.logo} width="100%" />
+              <Icon
+                icon={item.logo}
+                width="100%"
+                style={{ marginTop: '8px', marginBottom: '8px' }}
+              />
             </Card.Header>
-            <Card.Body style={{ minHeight: '105px' }}>
+            <Card.Body style={{ minHeight: '105px', textAlign: 'center' }}>
               {item.desc}
               <br />
               <br />

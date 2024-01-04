@@ -298,7 +298,7 @@ export const getSpartaPrice = () => async (dispatch) => {
     )
     dispatch(updateSpartaPrice(spartaPrice.data['spartan-protocol-token'].usd))
   } catch (error) {
-    dispatch(updateError(error.reason ?? error.message ?? error))
+    dispatch(updateError(`ERR10 ${error.reason ?? error.message ?? error}`))
   }
   dispatch(updateLoading(false))
 }

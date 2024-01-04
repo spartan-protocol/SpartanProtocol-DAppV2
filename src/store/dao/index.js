@@ -306,8 +306,8 @@ export const proposalWeight = () => async (dispatch, getState) => {
           _proposalWeight = _proposalWeight.plus(
             getPoolShareWeight(
               votedArray[i].result.toString(),
-              vaultPools[i].result.poolUnits,
-              vaultPools[i].result.baseAmount,
+              vaultPools[i].poolUnits,
+              vaultPools[i].baseAmount,
             ),
           )
         }

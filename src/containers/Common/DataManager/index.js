@@ -72,7 +72,7 @@ const DataManager = () => {
     dispatch(getSpartaPrice()) // Run on load
     const interval = setInterval(() => {
       dispatch(getSpartaPrice()) // Run on interval
-    }, 10000)
+    }, 20000)
     return () => {
       clearInterval(interval)
     }

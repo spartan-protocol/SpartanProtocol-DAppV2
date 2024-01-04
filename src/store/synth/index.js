@@ -164,20 +164,20 @@ export const getSynthDetails = (walletAddr) => async (dispatch, getState) => {
       const { rpcs } = getState().web3
       const contract = getSSUtilsContract(null, rpcs)
 
-      const awaitArray = await contract.simulate.getSynthDetails([
+      const synthRes = await contract.simulate.getSynthDetails([
         walletAddr ?? addresses.bnb,
         synthTokens,
       ])
       const synthDetails = []
-      for (let i = 0; i < awaitArray.length; i++) {
+      for (let i = 0; i < synthRes.result.length; i++) {
         synthDetails.push({
           tokenAddress: synthTokens[i],
-          address: awaitArray[i].result.synthAddress,
-          balance: awaitArray[i].result.balance.toString(),
-          staked: awaitArray[i].result.staked.toString(),
+          address: synthRes.result[i].synthAddress,
+          balance: synthRes.result[i].balance.toString(),
+          staked: synthRes.result[i].staked.toString(),
           lastHarvest: '0', // awaitArray[i].toString(),
-          lpBalance: awaitArray[i].result.collateral.toString(),
-          totalSupply: awaitArray[i].result.totalSupply.toString(),
+          lpBalance: synthRes.result[i].collateral.toString(),
+          totalSupply: synthRes.result[i].totalSupply.toString(),
         })
       }
       dispatch(updateSynthDetails(synthDetails))
