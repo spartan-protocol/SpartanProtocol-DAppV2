@@ -167,7 +167,7 @@ const Swap = () => {
           //   _asset2Addr = addresses.bnb
           // }
         } else {
-          if (!getPool(_asset1Addr, pool.poolDetails)?.curated) {
+          if (!getSynth(_asset1Addr, synth.synthDetails)) {
             _asset1Addr = addresses.bnb
           }
           if (!getPool(_asset2Addr, pool.poolDetails)) {
@@ -188,6 +188,7 @@ const Swap = () => {
   }, [
     activeTab,
     pool.poolDetails,
+    synth.synthDetails,
     focus,
     addresses.bnb,
     addresses.spartav2,
