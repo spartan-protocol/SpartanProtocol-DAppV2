@@ -307,8 +307,10 @@ export const createPoolADD =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      const _value = token === addresses.bnb ? inputToken : null
-      const ORs = { value: _value, gasPrice: gPrice }
+      const ORs = {
+        value: token === addresses.bnb ? inputToken : undefined,
+        gasPrice: gPrice,
+      }
       let txn = await contract.write.createPoolADD(
         [inputBase, inputToken, token],
         ORs,
