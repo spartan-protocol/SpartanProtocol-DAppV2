@@ -275,7 +275,7 @@ const NewProposal = () => {
                           <h5>
                             {' '}
                             {selectedType?.value === 'ADD_CURATED_POOL' &&
-                              'SPARTA depth > 250k'}
+                              'SPARTA depth > 3.5M'}
                           </h5>
                           <Row>
                             <Col xs="12">
