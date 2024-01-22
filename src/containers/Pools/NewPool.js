@@ -73,6 +73,51 @@ const NewPool = ({ setShowModal, showModal }) => {
     [tokenInput],
   )
 
+  const [priceInSparta, setPriceInSparta] = useState(null)
+  const [priceInToken, setPriceInToken] = useState(null)
+  const [priceInUsd, setPriceInUsd] = useState(null)
+
+  const handleCalcPrices = () => {
+    let spartaPrice = BN(tokenInput?.value).div(spartaInput?.value)
+    if (spartaPrice > 10) {
+      spartaPrice = formatFromUnits(spartaPrice, 2)
+    }
+    if (spartaPrice > 1) {
+      spartaPrice = formatFromUnits(spartaPrice, 4)
+    }
+    if (spartaPrice > 0) {
+      spartaPrice = formatFromUnits(spartaPrice, 6)
+    }
+    setPriceInSparta(spartaPrice)
+
+    let tokenPrice = BN(spartaInput?.value).div(tokenInput?.value)
+    if (tokenPrice > 10) {
+      tokenPrice = formatFromUnits(tokenPrice, 2)
+    }
+    if (tokenPrice > 1) {
+      tokenPrice = formatFromUnits(tokenPrice, 4)
+    }
+    if (tokenPrice > 0) {
+      tokenPrice = formatFromUnits(tokenPrice, 6)
+    }
+    setPriceInToken(tokenPrice)
+
+    let usdPrice = BN(spartaInput?.value).div(tokenInput?.value)
+    usdPrice = usdPrice.times(
+      web3.spartaPrice > 0 ? web3.spartaPrice : web3.spartaPriceInternal,
+    )
+    if (usdPrice > 10) {
+      usdPrice = formatFromUnits(usdPrice, 2)
+    }
+    if (usdPrice > 1) {
+      usdPrice = formatFromUnits(usdPrice, 4)
+    }
+    if (usdPrice > 0) {
+      usdPrice = formatFromUnits(usdPrice, 6)
+    }
+    setPriceInUsd(usdPrice)
+  }
+
   const [prevToken, setPrevToken] = useState(null)
   const [addrValid, setaddrValid] = useState(false)
   const clearTokenInfo = () => {
@@ -81,79 +126,72 @@ const NewPool = ({ setShowModal, showModal }) => {
     setTokenSymbol('TOKEN')
   }
 
-  useEffect(() => {
-    const getTokenInfo = async () => {
-      if (chainId === 56) {
-        const info = await getTwTokenInfo(addrInput?.value)
-        if (info) {
-          setTokenInfo(info)
+  const fetchTokenInfo = async (tokenAddr, rpcs) => {
+    if (chainId === 56) {
+      const info = await getTwTokenInfo(tokenAddr)
+      if (info) {
+        setTokenInfo(info)
+        if (info.decimals === 18) {
+          setaddrValid(true)
+        } else {
+          setaddrValid(false)
         }
-        setTokenIcon(await getTwTokenLogo(addrInput?.value, chainId))
       }
-      const provider = getWalletProvider(null, web3.rpcs)
-      const deployed = await provider.getBytecode({ address: addrInput?.value })
-      const contract = getTokenContract(addrInput?.value, null, web3.rpcs)
-      let symbol = 'TOKEN'
-      try {
-        symbol = deployed !== '0x' ? await contract.read.symbol() : 'TOKEN'
-      } catch (e) {
-        console.error(e)
-        symbol = 'TOKEN'
-      }
-      setTokenSymbol(symbol)
+      setTokenIcon(await getTwTokenLogo(tokenAddr, chainId))
     }
+    const provider = getWalletProvider(null, rpcs)
+    const deployed = await provider.getBytecode({ tokenAddr })
+    const contract = getTokenContract(tokenAddr, null, rpcs)
+    let symbol = 'TOKEN'
+    try {
+      symbol = deployed !== '0x' ? await contract.read.symbol() : 'TOKEN'
+    } catch (e) {
+      console.error(e)
+      symbol = 'TOKEN'
+    }
+    setTokenSymbol(symbol)
+  }
+
+  const handleGetTokenInfo = async () => {
     const handleInvalid = () => {
       setaddrValid(false)
       handleSpartaChange('')
       handleTokenChange('')
-    }
-    if (addrInput?.value?.length === 42 && isAddress(addrInput?.value)) {
-      if (tempChains.includes(chainId)) {
-        if (prevToken !== addrInput?.value) {
-          getTokenInfo()
-        }
-        if (tokenInfo.decimals === 18) {
-          setaddrValid(true)
-        } else {
-          handleInvalid()
-        }
-      } else {
-        handleInvalid()
-        clearTokenInfo()
-      }
-      setPrevToken(addrInput?.value)
-    } else {
-      handleInvalid()
       clearTokenInfo()
     }
-  }, [
-    addrInput?.value,
-    showModal,
-    tokenInfo,
-    prevToken,
-    handleSpartaChange,
-    handleTokenChange,
-    web3.rpcs,
-    chainId,
-  ])
+    if (!addrInput.value?.length === 42 || !isAddress(addrInput.value)) {
+      handleInvalid()
+      return // Address is not valid
+    }
+    if (!tempChains.includes(chainId)) {
+      handleInvalid()
+      return // Chain is not valid
+    }
+    if (prevToken !== addrInput.value) {
+      await fetchTokenInfo(addrInput.value, web3.rpcs) // Fetch token info
+    }
+    setPrevToken(addrInput.value)
+  }
 
   const [spartaValid, setSpartaValid] = useState(false)
-  useEffect(() => {
+  const handleSpartaChangeValid = () => {
     if (spartaInput?.value >= minBase && spartaInput?.value <= 100000) {
       setSpartaValid(true)
     } else {
       setSpartaValid(false)
     }
-  }, [spartaInput?.value])
+    handleCalcPrices()
+  }
 
   const [tokenValid, setTokenValid] = useState(false)
-  useEffect(() => {
+  const handleTokenChangeValid = () => {
     if (tokenInput?.value > 0.0000000000001) {
       setTokenValid(true)
     } else {
       setTokenValid(false)
     }
-  }, [tokenInput?.value])
+    handleCalcPrices()
+  }
 
   const [formValid, setformValid] = useState(false)
   useEffect(() => {
@@ -197,51 +235,6 @@ const NewPool = ({ setShowModal, showModal }) => {
       handleModalClear()
     }
   }, [addrInput, handleSpartaChange, handleTokenChange, showModal])
-
-  const priceInSparta = () => {
-    const price = BN(tokenInput?.value).div(spartaInput?.value)
-    if (price > 10) {
-      return formatFromUnits(price, 2)
-    }
-    if (price > 1) {
-      return formatFromUnits(price, 4)
-    }
-    if (price > 0) {
-      return formatFromUnits(price, 6)
-    }
-    return '0.00'
-  }
-
-  const priceInToken = () => {
-    const price = BN(spartaInput?.value).div(tokenInput?.value)
-    if (price > 10) {
-      return formatFromUnits(price, 2)
-    }
-    if (price > 1) {
-      return formatFromUnits(price, 4)
-    }
-    if (price > 0) {
-      return formatFromUnits(price, 6)
-    }
-    return '0.00'
-  }
-
-  const priceinUSD = () => {
-    let price = BN(spartaInput?.value).div(tokenInput?.value)
-    price = price.times(
-      web3.spartaPrice > 0 ? web3.spartaPrice : web3.spartaPriceInternal,
-    )
-    if (price > 10) {
-      return formatFromUnits(price, 2)
-    }
-    if (price > 1) {
-      return formatFromUnits(price, 4)
-    }
-    if (price > 0) {
-      return formatFromUnits(price, 6)
-    }
-    return '0.00'
-  }
 
   const isLoading = () => {
     if (!pool.tokenDetails) {
@@ -314,6 +307,7 @@ const NewPool = ({ setShowModal, showModal }) => {
                         autoCorrect="off"
                         isValid={addrValid}
                         isInvalid={!addrValid}
+                        onChange={() => handleGetTokenInfo()}
                       />
                       <Form.Control.Feedback type="invalid">
                         {t('invalidTokenAddress')}{' '}
@@ -324,7 +318,6 @@ const NewPool = ({ setShowModal, showModal }) => {
                         >
                           TrustWallet repo
                         </a>
-                        )
                       </Form.Control.Feedback>
                     </InputGroup>
                     {t('initialLiquidityAdd')}:
@@ -343,6 +336,7 @@ const NewPool = ({ setShowModal, showModal }) => {
                         isValid={spartaValid}
                         isInvalid={!spartaValid && addrValid}
                         disabled={!addrValid}
+                        onChange={() => handleSpartaChangeValid()}
                       />
                       <Form.Control.Feedback type="invalid">
                         Must be between {minBase / 1000}K - 100K SPARTA
@@ -363,18 +357,24 @@ const NewPool = ({ setShowModal, showModal }) => {
                         isValid={tokenValid}
                         isInvalid={!tokenValid && addrValid && spartaValid}
                         disabled={!addrValid}
+                        onChange={() => handleTokenChangeValid()}
                       />
                       <Form.Control.Feedback type="invalid">
                         Make sure you thoroughly check the ratio of the assets
                         being added
                       </Form.Control.Feedback>
                     </InputGroup>
-                    <div className="output-card text-center my-2">
-                      1 SPARTA = {priceInSparta()} {tokenSymbol}
-                      <br />1 {tokenSymbol} = {priceInToken()} SPARTA
-                      <br />1 {tokenSymbol} = ~$
-                      {priceinUSD()} USD
-                    </div>
+                    {tokenSymbol && (
+                      <div className="output-card text-center my-2">
+                        {priceInSparta &&
+                          `1 SPARTA = ${priceInSparta} ${tokenSymbol}`}
+                        <br />
+                        {priceInToken &&
+                          `1 ${tokenSymbol} = ${priceInToken} SPARTA`}
+                        <br />
+                        {priceInUsd && `1 ${tokenSymbol} = ~$${priceInUsd} USD`}
+                      </div>
+                    )}
                     <Form>
                       <div className="text-center">
                         <Form.Check
