@@ -57,7 +57,7 @@ const AssetSelect = (props) => {
           (asset) =>
             !asset.curated &&
             !filter.includes(asset.tokenAddress) &&
-            BN(asset.baseAmount).isGreaterThan(convertToWei(250000)),
+            BN(asset.baseAmount).isGreaterThan(convertToWei(3500000)),
         )
       } else if (message !== maxCurateMsg) {
         setMessage(maxCurateMsg)
