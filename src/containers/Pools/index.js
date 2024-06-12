@@ -17,7 +17,7 @@ import { BN } from '../../utils/bigNumber'
 import HelmetLoading from '../../components/Spinner/index'
 import { useBond } from '../../store/bond'
 import WrongNetwork from '../../components/WrongNetwork/index'
-import SummaryItem from './SummaryItem'
+// import SummaryItem from './SummaryItem'
 import { Icon } from '../../components/Icons/index'
 import { useWeb3 } from '../../store/web3'
 import { calcAPY, calcDaoAPY } from '../../utils/math/nonContract'
@@ -234,7 +234,7 @@ const Overview = () => {
       {tempChains.includes(app.chainId) && (
         <>
           <Row>
-            <SummaryItem />
+            {/* <SummaryItem /> */}
             {/* MOBILE FILTER DROPDOWN -> CHANGE THIS TO NAV-DROPDOWN? */}
             <Col className="d-flex d-sm-none mt-3 mb-1">
               <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
@@ -367,7 +367,7 @@ const Overview = () => {
                         <PoolTableItem
                           key={asset.address}
                           asset={asset}
-                          daoApy={daoApy}
+                          // daoApy={daoApy}
                         />
                       ))}
 
@@ -377,7 +377,7 @@ const Overview = () => {
                         <PoolTableItem
                           key={asset.address}
                           asset={asset}
-                          daoApy={daoApy}
+                          // daoApy={daoApy}
                         />
                       ))}
 

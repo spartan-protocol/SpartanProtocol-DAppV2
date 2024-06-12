@@ -23,7 +23,7 @@ import {
   getRPCBlocks,
   getSpartaPrice,
   useWeb3,
-  getGlobalMetrics,
+  // getGlobalMetrics,
   updateTxn as updateTxnWeb3,
 } from '../../../store/web3'
 import { addTxn, liveChains } from '../../../utils/web3'
@@ -46,7 +46,7 @@ const DataManager = () => {
   useEffect(() => {
     const checkRpcs = () => {
       dispatch(getRPCBlocks())
-      dispatch(getGlobalMetrics())
+      // dispatch(getGlobalMetrics())
     }
     checkRpcs() // Run on load
     const interval = setInterval(() => {

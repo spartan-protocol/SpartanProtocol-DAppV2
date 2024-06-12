@@ -18,7 +18,7 @@ import {
   convertToWei,
   formatFromUnits,
 } from '../../utils/bigNumber'
-import { callGlobalMetrics } from '../../utils/extCalls'
+// import { callGlobalMetrics } from '../../utils/extCalls'
 import { checkResolved } from '../../utils/helpers.ts'
 import { getPool } from '../../utils/math/utils'
 
@@ -414,15 +414,15 @@ export const getRPCBlocks = () => async (dispatch, getState) => {
   dispatch(updateLoading(false))
 }
 
-export const getGlobalMetrics = () => async (dispatch) => {
-  dispatch(updateLoading(true))
-  try {
-    const global = await callGlobalMetrics()
-    dispatch(updateMetrics({ global }))
-  } catch (error) {
-    dispatch(updateError(error.reason ?? error.message ?? error))
-  }
-  dispatch(updateLoading(false))
-}
+// export const getGlobalMetrics = () => async (dispatch) => {
+//   dispatch(updateLoading(true))
+//   try {
+//     const global = await callGlobalMetrics()
+//     dispatch(updateMetrics({ global }))
+//   } catch (error) {
+//     dispatch(updateError(error.reason ?? error.message ?? error))
+//   }
+//   dispatch(updateLoading(false))
+// }
 
 export default web3Slice.reducer

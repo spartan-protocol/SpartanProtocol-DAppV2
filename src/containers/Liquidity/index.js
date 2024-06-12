@@ -14,7 +14,7 @@ import WrongNetwork from '../../components/WrongNetwork/index'
 import { balanceWidths } from './Components/Utils'
 import NewPool from '../Pools/NewPool'
 import { Icon } from '../../components/Icons'
-import Metrics from './Components/Metrics'
+// import Metrics from './Components/Metrics'
 import { getPool } from '../../utils/math/utils'
 import Share from '../../components/Share'
 import Settings from '../../components/Settings'
@@ -182,9 +182,9 @@ const Overview = () => {
                   </Card>
                 </Col>
                 <Col>
-                  <Metrics
+                  {/* <Metrics
                     assetSwap={activeTab === 'add' ? assetLiq3 : assetLiq1}
-                  />
+                  /> */}
                 </Col>
               </>
             ) : (
