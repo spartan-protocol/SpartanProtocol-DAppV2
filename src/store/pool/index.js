@@ -7,7 +7,7 @@ import {
 import { oneWeek, parseTxn } from '../../utils/web3'
 import { getSecsSince } from '../../utils/math/nonContract'
 import { BN } from '../../utils/bigNumber'
-import { getPoolIncentives } from '../../utils/extCalls'
+// import { getPoolIncentives } from '../../utils/extCalls'
 import { getBondDetails } from '../bond'
 import { getDaoDetails } from '../dao'
 import { getSymbolUrl } from '../../utils/helpers.ts'
@@ -73,39 +73,39 @@ export const {
   updateIncentives,
 } = poolSlice.actions
 
-/**
- * Add rolling 30d incentives to store
- * @returns {array} eventArray
- */
-export const getMonthIncentives = () => async (dispatch, getState) => {
-  dispatch(updateLoading(true))
-  const { poolDetails } = getState().pool
-  try {
-    if (poolDetails.length > 0) {
-      let _poolArray = poolDetails.filter((x) => x.baseAmount > 0)
-      _poolArray = _poolArray.sort((a, b) => b.baseAmount - a.baseAmount)
-      const incentives = []
-      const _incentives = await getPoolIncentives(_poolArray)
-      for (let i = 0; i < _poolArray.length; i++) {
-        const index = _incentives.findIndex(
-          (x) => x.pool.id === _poolArray[i].address.toString().toLowerCase(),
-        )
-        incentives.push({
-          address: _poolArray[i].address,
-          timestamp: index > -1 ? _incentives[index].timestamp : '0',
-          incentives: index > -1 ? _incentives[index].incentives30Day : '0',
-          fees: index > -1 ? _incentives[index].fees30Day : '0',
-          volume: index > -1 ? _incentives[index].volRollingUSD : '0',
-        })
-      }
-      // console.log('debug success', incentives)
-      dispatch(updateIncentives(incentives))
-    }
-  } catch (error) {
-    dispatch(updateError(error.reason ?? error.message ?? error))
-  }
-  dispatch(updateLoading(false))
-}
+// /**
+//  * Add rolling 30d incentives to store
+//  * @returns {array} eventArray
+//  */
+// export const getMonthIncentives = () => async (dispatch, getState) => {
+//   dispatch(updateLoading(true))
+//   const { poolDetails } = getState().pool
+//   try {
+//     if (poolDetails.length > 0) {
+//       let _poolArray = poolDetails.filter((x) => x.baseAmount > 0)
+//       _poolArray = _poolArray.sort((a, b) => b.baseAmount - a.baseAmount)
+//       const incentives = []
+//       const _incentives = await getPoolIncentives(_poolArray)
+//       for (let i = 0; i < _poolArray.length; i++) {
+//         const index = _incentives.findIndex(
+//           (x) => x.pool.id === _poolArray[i].address.toString().toLowerCase(),
+//         )
+//         incentives.push({
+//           address: _poolArray[i].address,
+//           timestamp: index > -1 ? _incentives[index].timestamp : '0',
+//           incentives: index > -1 ? _incentives[index].incentives30Day : '0',
+//           fees: index > -1 ? _incentives[index].fees30Day : '0',
+//           volume: index > -1 ? _incentives[index].volRollingUSD : '0',
+//         })
+//       }
+//       // console.log('debug success', incentives)
+//       dispatch(updateIncentives(incentives))
+//     }
+//   } catch (error) {
+//     dispatch(updateError(error.reason ?? error.message ?? error))
+//   }
+//   dispatch(updateLoading(false))
+// }
 
 /**
  * Add LP wallet-details to final array
@@ -190,7 +190,7 @@ export const getPoolDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(updatePoolDetails(poolDetails))
       dispatch(getBondDetails(walletAddr)) // Update bondDetails -> bondVaultWeight
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails -> daoVaultWeight
-      dispatch(getMonthIncentives()) // Update the incentive metrics
+      // dispatch(getMonthIncentives()) // Update the incentive metrics
       dispatch(getSpartaPriceInternal()) // Update internally derived SPARTA price
     }
   } catch (error) {

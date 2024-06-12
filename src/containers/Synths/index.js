@@ -29,7 +29,7 @@ import {
 import { swapSynthToAsset } from '../../store/router'
 import HelmetLoading from '../../components/Spinner/index'
 import Approval from '../../components/Approval/index'
-import SwapPair from '../Swap/SwapPair'
+// import SwapPair from '../Swap/SwapPair'
 import Share from '../../components/Share/index'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import NewSynth from './NewSynth'
@@ -1325,7 +1325,7 @@ const Swap = () => {
                     )}
                   </Col>
                   <Col>
-                    {!isLoading() &&
+                    {/* {!isLoading() &&
                       synthCount() > 0 &&
                       assetSwap1.tokenAddress !== addresses.spartav2 &&
                       assetSwap2.tokenAddress !== assetSwap1.tokenAddress && (
@@ -1335,7 +1335,7 @@ const Swap = () => {
                       synthCount() > 0 &&
                       assetSwap2.tokenAddress !== addresses.spartav2 && (
                         <SwapPair assetSwap={assetSwap2} />
-                      )}
+                      )} */}
                   </Col>
                 </Row>
               </>

@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row'
 import Nav from 'react-bootstrap/Nav'
 import { tempChains } from '../../utils/web3'
 import { usePool } from '../../store/pool'
-import Metrics from './Components/Metrics'
+// import Metrics from './Components/Metrics'
 import HelmetLoading from '../../components/Spinner/index'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { Icon } from '../../components/Icons/index'
@@ -22,7 +22,7 @@ import { useApp } from '../../store/app'
 const Swap = () => {
   const { t } = useTranslation()
 
-  const { addresses, asset1, asset2, chainId } = useApp()
+  const { asset1, asset2, chainId } = useApp()
   const pool = usePool()
   const navigate = useNavigate()
 
@@ -169,14 +169,14 @@ const Swap = () => {
                   </Card>
                 </Col>
                 <Col>
-                  {assetSwap1 &&
+                  {/* {assetSwap1 &&
                     assetSwap1.tokenAddress !== addresses.spartav2 && (
                       <Metrics assetSwap={assetSwap1} />
                     )}
                   {assetSwap2 &&
                     assetSwap2.tokenAddress !== addresses.spartav2 && (
                       <Metrics assetSwap={assetSwap2} />
-                    )}
+                    )} */}
                 </Col>
               </>
             ) : (

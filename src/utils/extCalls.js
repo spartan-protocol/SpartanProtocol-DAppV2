@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { getAddresses, getChainId } from './web3'
 
 export const subgraphAPI =
-  'https://api.thegraph.com/subgraphs/name/spartan-protocol/pool-factory'
+  'https://api.thegraph.com/subgraphs/name/spartan-protocol/pool-factory' // TODO: Replace with new subgraph
 export const subgraphClient = new ApolloClient({
   uri: subgraphAPI,
   cache: new InMemoryCache(),
@@ -91,290 +91,123 @@ export const getPastPriceByID = async (ID, date) => {
   return data
 }
 
-//
-export const getSubGraphBlock = async () => {
-  const tokensQuery = `
-  query {
-    _meta{
-      block {
-        number
-      }
-    }
-  }
-`
-  try {
-    const result = await subgraphClient
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => data.data._meta.block.number)
-    if (!result) {
-      console.log('no result')
-      return false
-    }
-    const info = await result
-    return info
-  } catch (err) {
-    console.log(err)
-    return false
-  }
-}
+// export const getPoolIncentives = async (poolDetails) => {
+//   const _poolArray = []
+//   for (let i = 0; i < poolDetails.length; i++) {
+//     _poolArray.push(poolDetails[i].address.toString().toLowerCase())
+//   }
+//   const count = _poolArray.length * 30 <= 1000 ? _poolArray.length * 30 : 1000
+//   const tokensQuery = `
+//   query {
+//     metricsPoolDays(orderBy: timestamp, orderDirection: desc, first: ${count}, where: {pool_in: [${_poolArray.map(
+//     (x) => `"${x}"`,
+//   )}]}) {
+//       id
+//       timestamp
+//       fees30Day
+//       incentives30Day
+//       volRollingUSD
+//       pool {
+//         id
+//       }
+//     }
+//   }
+// `
+//   try {
+//     const result = await subgraphClient
+//       .query({
+//         query: gql(tokensQuery),
+//       })
+//       .then((data) => data.data.metricsPoolDays)
+//     if (!result) {
+//       console.log('no result')
+//       return false
+//     }
+//     const info = await result
+//     return info
+//   } catch (err) {
+//     console.log(err)
+//     return false
+//   }
+// }
 
-//
-export const getMemberPositions = async (memberAddr) => {
-  const block = await getSubGraphBlock()
-  const member = memberAddr.toString().toLowerCase()
-  const tokensQuery = `
-  query {
-    members(where: {id: "${member}"}) {
-      id
-      fees
-      netAddSparta
-      netRemSparta
-      netHarvestSparta
-      netAddUsd
-      netRemUsd
-      netHarvestUsd
-      positions {
-        pool {
-          id
-          symbol
-        }
-        netAddSparta
-        netRemSparta
-        netAddToken
-        netRemToken
-        netAddUsd
-        netRemUsd
-        netLiqUnits
-      }
-    }
-  }
-`
-  try {
-    const result = await subgraphClient
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => data.data.members[0])
-    if (!result) {
-      console.log('no result')
-      return [false, 0]
-    }
-    const info = await result
-    return [info, block]
-  } catch (err) {
-    console.log(err)
-    return [false, 0]
-  }
-}
+// export const callGlobalMetrics = async () => {
+//   const tokensQuery = `
+//   query {
+//     metricsGlobalDays(orderBy: id, orderDirection: desc) {
+//       id
+//       timestamp
+//       volSPARTA
+//       volUSD
+//       fees
+//       feesUSD
+//       txCount
+//       tvlSPARTA
+//       tvlUSD
+//       daoVault30Day
+//       synthVault30Day
+//     }
+//   }
+// `
+//   try {
+//     const result = await subgraphClient
+//       .query({
+//         query: gql(tokensQuery),
+//       })
+//       .then((data) => data.data.metricsGlobalDays)
+//     if (!result) {
+//       console.log('no result')
+//       return false
+//     }
+//     const metrics = await result
+//     return metrics
+//   } catch (err) {
+//     console.log(err)
+//     return false
+//   }
+// }
 
-//
-export const getMemberSynthPositions = async (memberAddr) => {
-  const block = await getSubGraphBlock()
-  const member = memberAddr.toString().toLowerCase()
-  const tokensQuery = `
-  query {
-    members(where: {id: "${member}"}) {
-      id
-      netForgeSparta
-      netForgeUsd
-      netMeltSparta
-      netMeltUsd
-      netSynthHarvestSparta
-      netSynthHarvestUsd
-      synthPositions {
-        id
-        netForgeSparta
-        netForgeUsd
-        netMeltSparta
-        netMeltUsd
-        netSynthHarvestSparta
-        netSynthHarvestUsd
-      }
-    }
-  }
-`
-  try {
-    const result = await subgraphClient
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => data.data.members[0])
-    if (!result) {
-      console.log('no result')
-      return [false, 0]
-    }
-    const info = await result
-    return [info, block]
-  } catch (err) {
-    console.log(err)
-    return [false, 0]
-  }
-}
-
-export const getPoolIncentives = async (poolDetails) => {
-  const _poolArray = []
-  for (let i = 0; i < poolDetails.length; i++) {
-    _poolArray.push(poolDetails[i].address.toString().toLowerCase())
-  }
-  const count = _poolArray.length * 30 <= 1000 ? _poolArray.length * 30 : 1000
-  const tokensQuery = `
-  query {
-    metricsPoolDays(orderBy: timestamp, orderDirection: desc, first: ${count}, where: {pool_in: [${_poolArray.map(
-    (x) => `"${x}"`,
-  )}]}) {
-      id
-      timestamp
-      fees30Day
-      incentives30Day
-      volRollingUSD
-      pool {
-        id
-      }
-    }
-  }
-`
-  try {
-    const result = await subgraphClient
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => data.data.metricsPoolDays)
-    if (!result) {
-      console.log('no result')
-      return false
-    }
-    const info = await result
-    return info
-  } catch (err) {
-    console.log(err)
-    return false
-  }
-}
-
-//
-export const callGlobalMetrics = async () => {
-  const tokensQuery = `
-  query {
-    metricsGlobalDays(orderBy: id, orderDirection: desc) {
-      id
-      timestamp
-      volSPARTA
-      volUSD
-      fees
-      feesUSD
-      txCount
-      tvlSPARTA
-      tvlUSD
-      daoVault30Day
-      synthVault30Day
-    }
-  }
-`
-  try {
-    const result = await subgraphClient
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => data.data.metricsGlobalDays)
-    if (!result) {
-      console.log('no result')
-      return false
-    }
-    const metrics = await result
-    return metrics
-  } catch (err) {
-    console.log(err)
-    return false
-  }
-}
-
-export const callPoolMetrics = async (poolAddress, limit = 0) => {
-  const address = poolAddress.toString().toLowerCase()
-  const limitQuery = limit ? `first:${limit},` : ''
-  const tokensQuery = `
-  query {
-    metricsPoolDays(${limitQuery} orderBy: timestamp, orderDirection: desc, where: {pool: "${address}"}) {
-      id
-      timestamp
-      pool {
-        id
-      }
-      volSPARTA
-      volUSD
-      fees
-      feesUSD
-      fees30Day
-      incentives
-      incentivesUSD
-      incentives30Day
-      txCount
-      tvlSPARTA
-      tvlUSD
-      tokenPrice
-      lpUnits
-    }
-  }
-`
-  try {
-    const result = await subgraphClient
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => data.data.metricsPoolDays)
-    if (!result) {
-      console.log('no result')
-      return false
-    }
-    const metrics = await result
-    return metrics
-  } catch (err) {
-    console.log(err)
-    return false
-  }
-}
-
-export const Token = async (poolAddress) => {
-  const address = poolAddress.toString().toLowerCase()
-  const tokensQuery = `
-  query {
-    Pool(where: {pool: "${address}"}) {
-      id
-      timestamp
-      pool {
-        id
-      }
-      volSPARTA
-      volUSD
-      fees
-      feesUSD
-      fees30Day
-      incentives
-      incentivesUSD
-      incentives30Day
-      txCount
-      tvlSPARTA
-      tvlUSD
-      tokenPrice
-      lpUnits
-    }
-  }
-`
-  try {
-    const result = await subgraphClient
-      .query({
-        query: gql(tokensQuery),
-      })
-      .then((data) => data.data.metricsPoolDays)
-    if (!result) {
-      console.log('no result')
-      return false
-    }
-    const metrics = await result
-    return metrics
-  } catch (err) {
-    console.log(err)
-    return false
-  }
-}
+// export const callPoolMetrics = async (poolAddress, limit = 0) => {
+//   const address = poolAddress.toString().toLowerCase()
+//   const limitQuery = limit ? `first:${limit},` : ''
+//   const tokensQuery = `
+//   query {
+//     metricsPoolDays(${limitQuery} orderBy: timestamp, orderDirection: desc, where: {pool: "${address}"}) {
+//       id
+//       timestamp
+//       pool {
+//         id
+//       }
+//       volSPARTA
+//       volUSD
+//       fees
+//       feesUSD
+//       fees30Day
+//       incentives
+//       incentivesUSD
+//       incentives30Day
+//       txCount
+//       tvlSPARTA
+//       tvlUSD
+//       tokenPrice
+//       lpUnits
+//     }
+//   }
+// `
+//   try {
+//     const result = await subgraphClient
+//       .query({
+//         query: gql(tokensQuery),
+//       })
+//       .then((data) => data.data.metricsPoolDays)
+//     if (!result) {
+//       console.log('no result')
+//       return false
+//     }
+//     const metrics = await result
+//     return metrics
+//   } catch (err) {
+//     console.log(err)
+//     return false
+//   }
+// }

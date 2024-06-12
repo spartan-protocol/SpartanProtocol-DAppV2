@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Popover from 'react-bootstrap/Popover'
+// import Popover from 'react-bootstrap/Popover'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import Row from 'react-bootstrap/Row'
 import { usePool } from '../../store/pool'
@@ -20,13 +20,13 @@ import {
 } from '../../utils/bigNumber'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
-import { calcAPY } from '../../utils/math/nonContract'
+// import { calcAPY } from '../../utils/math/nonContract'
 import spartaIcon from '../../assets/tokens/spartav2.svg'
 
 import styles from './styles.module.scss'
 import { useApp } from '../../store/app'
 
-const PoolItem = ({ asset, daoApy }) => {
+const PoolItem = ({ asset }) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -48,7 +48,7 @@ const PoolItem = ({ asset, daoApy }) => {
     tokenAddress,
     baseAmount,
     tokenAmount,
-    genesis,
+    // genesis,
     newPool,
     curated,
     safety,
@@ -63,48 +63,48 @@ const PoolItem = ({ asset, daoApy }) => {
 
   const [showDetails, setShowDetails] = useState(false)
 
-  const getFees = () =>
-    pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].fees
-      : 0
+  // const getFees = () =>
+  //   pool.incentives
+  //     ? pool.incentives.filter((x) => x.address === asset.address)[0].fees
+  //     : 0
 
-  const getDivis = () =>
-    curated && pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
-      : 0
+  // const getDivis = () =>
+  //   curated && pool.incentives
+  //     ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
+  //     : 0
 
-  const getVolume = () => {
-    if (!pool.incentives) return 0
-    const _item = pool.incentives.filter((x) => x.address === asset.address)[0]
-    if (!_item) return 0
-    const isRecent = pool.incentives[0].timestamp - _item.timestamp < 172800
-    if (!isRecent) return 0
-    return _item.volume
-  }
+  // const getVolume = () => {
+  //   if (!pool.incentives) return 0
+  //   const _item = pool.incentives.filter((x) => x.address === asset.address)[0]
+  //   if (!_item) return 0
+  //   const isRecent = pool.incentives[0].timestamp - _item.timestamp < 172800
+  //   if (!isRecent) return 0
+  //   return _item.volume
+  // }
 
-  const APY = calcAPY(asset, getFees(), getDivis())
+  // const APY = calcAPY(asset, getFees(), getDivis())
 
-  const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
+  // const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
 
   const toggleCollapse = () => {
     setShowDetails(!showDetails)
   }
 
-  const revenueTooltip = Tooltip(
-    t,
-    'revenue',
-    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-  )
-  const swapRevTooltip = Tooltip(
-    t,
-    'swapRevenue',
-    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-  )
-  const diviRevTooltip = Tooltip(
-    t,
-    'incentivesRevenue',
-    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-  )
+  // const revenueTooltip = Tooltip(
+  //   t,
+  //   'revenue',
+  //   poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+  // )
+  // const swapRevTooltip = Tooltip(
+  //   t,
+  //   'swapRevenue',
+  //   poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+  // )
+  // const diviRevTooltip = Tooltip(
+  //   t,
+  //   'incentivesRevenue',
+  //   poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+  // )
   const poolCapTooltip = Tooltip(t, 'poolCap')
   const poolRatioTooltip = Tooltip(t, 'poolRatio')
 
@@ -257,7 +257,7 @@ const PoolItem = ({ asset, daoApy }) => {
               </Col>
             </Row>
 
-            <Row className="my-1">
+            {/* <Row className="my-1">
               <Col xs="auto" className="pe-0">
                 {t('estimatedApy')}
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
@@ -319,8 +319,8 @@ const PoolItem = ({ asset, daoApy }) => {
                   </span>
                 </OverlayTrigger>
               </Col>
-            </Row>
-            {showDetails === true && (
+            </Row> */}
+            {/* {showDetails === true && (
               <>
                 <Row className="my-1">
                   <Col xs="auto" className="fw-light">
@@ -359,15 +359,15 @@ const PoolItem = ({ asset, daoApy }) => {
                 </Row>
                 <hr className="my-2" />
               </>
-            )}
+            )} */}
 
-            <Row className="my-1">
+            {/* <Row className="my-1">
               <Col xs="auto" className="pe-0">
                 Vol 24Hr
               </Col>
               <Col className="text-end">${formatFromWei(getVolume(), 0)}</Col>
-            </Row>
-            <hr className="my-2" />
+            </Row> */}
+            {/* <hr className="my-2" /> */}
 
             <Row className="my-1">
               <Col xs="auto" className="pe-0">
@@ -517,7 +517,7 @@ const PoolItem = ({ asset, daoApy }) => {
                 <hr className="my-2" />
               </>
             )}
-
+            {/* 
             <Row className="my-1">
               <Col xs="auto">
                 {t('revenue')}
@@ -534,8 +534,8 @@ const PoolItem = ({ asset, daoApy }) => {
                   0,
                 )}
               </Col>
-            </Row>
-            {showDetails === true && (
+            </Row> */}
+            {/* {showDetails === true && (
               <>
                 <Row className="my-1">
                   <Col xs="auto" className="fw-light">
@@ -572,7 +572,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   </Col>
                 </Row>
               </>
-            )}
+            )} */}
             <Row>
               <div
                 className="text-center mt-2"

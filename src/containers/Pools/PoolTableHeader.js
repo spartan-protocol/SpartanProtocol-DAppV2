@@ -90,7 +90,7 @@ const PoolTableHeader = ({ sortBy, sortTable }) => {
           />
           {t('liquidity')}
         </th>
-        <th
+        {/* <th
           className="d-none d-sm-table-cell user-select-none"
           role="button"
           onClick={() => sortTable('volume')}
@@ -138,7 +138,7 @@ const PoolTableHeader = ({ sortBy, sortTable }) => {
               />
             </span>
           </OverlayTrigger>
-        </th>
+        </th> */}
         <th />
       </tr>
     </thead>

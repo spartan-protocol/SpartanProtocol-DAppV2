@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Popover from 'react-bootstrap/Popover'
+// import Popover from 'react-bootstrap/Popover'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import Row from 'react-bootstrap/Row'
-import { Icon } from '../../components/Icons/index'
+// import { Icon } from '../../components/Icons/index'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
 import {
@@ -17,13 +17,13 @@ import {
   formatShortNumber,
   formatFromWei,
 } from '../../utils/bigNumber'
-import { calcAPY } from '../../utils/math/nonContract'
+// import { calcAPY } from '../../utils/math/nonContract'
 import { Tooltip } from '../../components/Tooltip/index'
 import spartaIcon from '../../assets/tokens/spartav2.svg'
 import styles from './styles.module.scss'
 import { useApp } from '../../store/app'
 
-const PoolTableItem = ({ asset, daoApy }) => {
+const PoolTableItem = ({ asset }) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -33,7 +33,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
 
   const [spartaPrice, setspartaPrice] = useState(0)
 
-  const { tokenAddress, baseAmount, tokenAmount, curated, baseCap } = asset
+  const { tokenAddress, baseAmount, tokenAmount, baseCap } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
   const tokenValueUSD = tokenValueBase.times(spartaPrice)
@@ -46,27 +46,27 @@ const PoolTableItem = ({ asset, daoApy }) => {
     }
   }, [web3.spartaPrice, web3.spartaPriceInternal])
 
-  const getFees = () =>
-    pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0]?.fees
-      : 0
+  // const getFees = () =>
+  //   pool.incentives
+  //     ? pool.incentives.filter((x) => x.address === asset.address)[0]?.fees
+  //     : 0
 
-  const getDivis = () =>
-    curated && pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0]
-          ?.incentives
-      : 0
+  // const getDivis = () =>
+  //   curated && pool.incentives
+  //     ? pool.incentives.filter((x) => x.address === asset.address)[0]
+  //         ?.incentives
+  //     : 0
 
-  const getVol = () => {
-    if (!pool.incentives) return 0
-    const _item = pool.incentives.filter((x) => x.address === asset.address)[0]
-    if (!_item) return 0
-    const isRecent = pool.incentives[0].timestamp - _item.timestamp < 172800
-    if (!isRecent) return 0
-    return _item.volume
-  }
+  // const getVol = () => {
+  //   if (!pool.incentives) return 0
+  //   const _item = pool.incentives.filter((x) => x.address === asset.address)[0]
+  //   if (!_item) return 0
+  //   const isRecent = pool.incentives[0].timestamp - _item.timestamp < 172800
+  //   if (!isRecent) return 0
+  //   return _item.volume
+  // }
 
-  const APY = calcAPY(asset, getFees(), getDivis())
+  // const APY = calcAPY(asset, getFees(), getDivis())
 
   const isAtCaps = () => {
     if (BN(baseCap).lt('1000000000000000000000000')) {
@@ -142,11 +142,11 @@ const PoolTableItem = ({ asset, daoApy }) => {
           {getTVL() > 0 ? `$${formatFromWei(getTVL(), 0)}` : '...'}
         </td>
         {/* volume */}
-        <td className="d-none d-sm-table-cell">
+        {/* <td className="d-none d-sm-table-cell">
           {getVol() > 0 ? `$${formatFromWei(getVol(), 0)}` : '...'}
-        </td>
+        </td> */}
         {/* apy */}
-        <td>
+        {/* <td>
           {formatFromUnits(curated && daoApy ? BN(APY).plus(daoApy) : APY, 2)}%
           <br />
           <small>Info</small>
@@ -196,7 +196,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
               <Icon icon="info" className="ms-1 mb-1" size="17" />
             </span>
           </OverlayTrigger>
-        </td>
+        </td> */}
         {/* actions (buttons) */}
         <td>
           <Row className="text-center mt-2 me-1">

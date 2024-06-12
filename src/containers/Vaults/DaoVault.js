@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAccount, useWalletClient } from 'wagmi'
 import { usePool } from '../../store/pool'
-import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
+import { BN, formatFromWei } from '../../utils/bigNumber'
 import {
   useDao,
   daoHarvest,
@@ -22,7 +22,7 @@ import { useSparta } from '../../store/sparta'
 import { useBond } from '../../store/bond'
 import { Icon } from '../../components/Icons/index'
 import {
-  calcDaoAPY,
+  // calcDaoAPY,
   getTimeSince,
   getVaultWeights,
 } from '../../utils/math/nonContract'
@@ -164,19 +164,19 @@ const DaoVault = () => {
     return true
   }
 
-  const isLoadingApy = () => {
-    if (!bond.totalWeight || !dao.totalWeight || !web3.metrics.global) {
-      return true
-    }
-    return false
-  }
+  // const isLoadingApy = () => {
+  //   if (!bond.totalWeight || !dao.totalWeight || !web3.metrics.global) {
+  //     return true
+  //   }
+  //   return false
+  // }
 
-  const APY = () => {
-    let revenue = BN(web3.metrics.global[0].daoVault30Day)
-    revenue = revenue.toString()
-    const baseAmount = getTotalWeight().toString()
-    return formatFromUnits(calcDaoAPY(revenue, baseAmount), 2)
-  }
+  // const APY = () => {
+  //   let revenue = BN(web3.metrics.global[0].daoVault30Day)
+  //   revenue = revenue.toString()
+  //   const baseAmount = getTotalWeight().toString()
+  //   return formatFromUnits(calcDaoAPY(revenue, baseAmount), 2)
+  // }
 
   const checkValid = () => {
     if (!address) {
@@ -206,7 +206,7 @@ const DaoVault = () => {
               <Col xs="auto" className="mt-2 h4">
                 {t('daoVault')}
               </Col>
-              <Col className="text-end m-auto d-flex justify-content-end">
+              {/* <Col className="text-end m-auto d-flex justify-content-end">
                 <Row>
                   <Col xs="12">
                     <span>APY</span>
@@ -225,7 +225,7 @@ const DaoVault = () => {
                     </div>
                   </Col>
                 </Row>
-              </Col>
+              </Col> */}
             </Row>
           </Card.Header>
           {!isLoading() ? (
