@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
 import { useAccount } from 'wagmi'
@@ -11,21 +10,13 @@ import {
   useSynth,
   getSynthGlobalDetails,
   synthVaultWeight,
-  // getSynthMemberDetails,
-  // getSynthMinting,
 } from '../../store/synth'
 import SynthVaultItem from './SynthVaultItem'
-import {
-  calcSynthAPY,
-  getSynthVaultWeights,
-} from '../../utils/math/nonContract'
+import { getSynthVaultWeights } from '../../utils/math/nonContract'
 import { usePool } from '../../store/pool'
 import { Icon } from '../../components/Icons/index'
 import HelmetLoading from '../../components/Spinner/index'
-// import SynthHarvestAllModal from './Components/SynthHarvestAllModal'
 import { useWeb3 } from '../../store/web3'
-import { synthHarvestLive } from '../../utils/web3'
-import { Tooltip } from '../../components/Tooltip/index'
 
 const SynthVault = () => {
   const { t } = useTranslation()
@@ -49,8 +40,6 @@ const SynthVault = () => {
   useEffect(() => {
     const getGlobals = () => {
       dispatch(getSynthGlobalDetails())
-      // dispatch(getSynthMemberDetails(address))
-      // dispatch(getSynthMinting())
     }
     getGlobals() // Run on load
     const interval = setInterval(() => {
@@ -64,20 +53,6 @@ const SynthVault = () => {
   useEffect(() => {
     dispatch(synthVaultWeight())
   }, [dispatch, synth.synthDetails])
-
-  const isLoadingApy = () => {
-    if (!synth.totalWeight || !web3.metrics.global) {
-      return true
-    }
-    return false
-  }
-
-  const APY = () => {
-    let revenue = BN(web3.metrics.global[0].synthVault30Day)
-    revenue = revenue.toString()
-    const baseAmount = synth.totalWeight.toString()
-    return formatFromUnits(calcSynthAPY(revenue, baseAmount), 2)
-  }
 
   const handleChangeShow = () => {
     setShowUsd(!showUsd)
@@ -131,30 +106,6 @@ const SynthVault = () => {
             <Row>
               <Col xs="auto" className="mt-2 h4">
                 {t('synthVault')}
-              </Col>
-              <Col className="text-end m-auto d-flex justify-content-end">
-                {synthHarvestLive && (
-                  <>
-                    <Row>
-                      <Col xs="12">
-                        <span>APY</span>
-                        <OverlayTrigger
-                          placement="auto"
-                          overlay={Tooltip(t, 'apyVault')}
-                        >
-                          <span role="button">
-                            <Icon icon="info" className="ms-1" size="17" />
-                          </span>
-                        </OverlayTrigger>
-                      </Col>
-                      <Col xs="12">
-                        <span className="ms-2">
-                          {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
-                        </span>
-                      </Col>
-                    </Row>
-                  </>
-                )}
               </Col>
             </Row>
           </Card.Header>
@@ -240,9 +191,6 @@ const SynthVault = () => {
                   </Col>
                 </Row>
               </Card.Body>
-              {/* <Card.Footer xs="12">
-                <SynthHarvestAllModal />
-              </Card.Footer> */}
             </>
           ) : (
             <HelmetLoading height={150} width={150} />

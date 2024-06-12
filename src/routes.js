@@ -5,7 +5,6 @@ import Liquidity from './containers/Liquidity'
 import Swap from './containers/Swap'
 import Synths from './containers/Synths'
 import Vaults from './containers/Vaults'
-import Positions from './containers/Positions'
 import Dao from './containers/Dao'
 import Upgrade from './containers/Upgrade'
 import PU from './containers/PU'
@@ -50,14 +49,6 @@ export const routes = [
     name: 'vaults',
     icon: 'vault',
     component: <Vaults />,
-    layout: '',
-  },
-
-  {
-    path: 'positions',
-    name: 'positions',
-    icon: 'analysis',
-    component: <Positions />,
     layout: '',
   },
 
