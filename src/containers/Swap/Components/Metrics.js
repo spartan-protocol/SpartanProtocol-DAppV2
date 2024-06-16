@@ -55,7 +55,7 @@
 
 //   const tokenPrice = BN(assetSwap.baseAmount)
 //     .div(assetSwap.tokenAmount)
-//     .times(web3.spartaPrice > 0 ? web3.spartaPrice : web3.spartaPriceInternal)
+//     .times(web3.spartaPriceInternal)
 
 //   const getToken = (tokenAddress) =>
 //     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -94,9 +94,7 @@
 //                   <span className="output-card ms-2">
 //                     $
 //                     {formatFromUnits(
-//                       web3.spartaPrice > 0
-//                         ? web3.spartaPrice
-//                         : web3.spartaPriceInternal,
+//                       web3.spartaPriceInternal,
 //                       4,
 //                     )}
 //                   </span>

@@ -64,12 +64,10 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   const [spartaPrice, setspartaPrice] = useState(0)
 
   useEffect(() => {
-    if (web3.spartaPrice > 0) {
-      setspartaPrice(web3.spartaPrice)
-    } else if (web3.spartaPriceInternal > 0) {
+    if (web3.spartaPriceInternal > 0) {
       setspartaPrice(web3.spartaPriceInternal)
     }
-  }, [web3.spartaPrice, web3.spartaPriceInternal])
+  }, [web3.spartaPriceInternal])
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
@@ -558,10 +556,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                           overlay={Tooltip(
                             t,
                             'pricingData',
-                            asset1USD ||
-                              assetSwap1?.tokenAddress === addresses.spartav2
-                              ? 'CoinGecko'
-                              : 'internal pool prices',
+                            asset1USD ? 'CoinGecko' : 'internal pool prices',
                           )}
                         >
                           <span role="button">
@@ -570,12 +565,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                               ? formatFromWei(getInput1USD(), 2)
                               : '0.00'}
                             <Icon
-                              icon={
-                                asset1USD ||
-                                assetSwap1?.tokenAddress === addresses.spartav2
-                                  ? 'coinGeckoIcon'
-                                  : 'usd'
-                              }
+                              icon={asset1USD ? 'coinGeckoIcon' : 'usd'}
                               size="14"
                               className="ms-1"
                             />
@@ -678,10 +668,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                           overlay={Tooltip(
                             t,
                             'pricingData',
-                            asset2USD ||
-                              assetSwap2?.tokenAddress === addresses.spartav2
-                              ? 'CoinGecko'
-                              : 'internal pool prices',
+                            asset2USD ? 'CoinGecko' : 'internal pool prices',
                           )}
                         >
                           <span role="button">
@@ -695,12 +682,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                               : '0.00'}
                             %)
                             <Icon
-                              icon={
-                                asset2USD ||
-                                assetSwap2?.tokenAddress === addresses.spartav2
-                                  ? 'coinGeckoIcon'
-                                  : 'usd'
-                              }
+                              icon={asset2USD ? 'coinGeckoIcon' : 'usd'}
                               size="14"
                               className="ms-1 mb-1"
                             />

@@ -51,12 +51,10 @@ const DaoVault = () => {
   const [spartaPrice, setspartaPrice] = useState(0)
 
   useEffect(() => {
-    if (web3.spartaPrice > 0) {
-      setspartaPrice(web3.spartaPrice)
-    } else if (web3.spartaPriceInternal > 0) {
+    if (web3.spartaPriceInternal > 0) {
       setspartaPrice(web3.spartaPriceInternal)
     }
-  }, [web3.spartaPrice, web3.spartaPriceInternal])
+  }, [web3.spartaPriceInternal])
 
   const handleChangeShow = () => {
     setShowUsd(!showUsd)
@@ -255,7 +253,7 @@ const DaoVault = () => {
                 >
                   {!showUsd
                     ? formatFromWei(getTotalWeight(), 0)
-                    : getUSDFromSparta()}
+                    : `~${getUSDFromSparta()}`}
                   <Icon
                     icon={showUsd ? 'usd' : 'spartav2'}
                     size="20"
@@ -322,7 +320,7 @@ const DaoVault = () => {
                               ),
                               0,
                             )
-                          : getUSDFromSpartaOwnWeight()}{' '}
+                          : `~${getUSDFromSpartaOwnWeight()}`}{' '}
                         ({getWeightPercent()}%)
                         <Icon
                           icon={showUsd ? 'usd' : 'spartav2'}
@@ -355,7 +353,11 @@ const DaoVault = () => {
                     {sparta.globalDetails.emissions
                       ? !address
                         ? t('connectWallet')
-                        : `${formatFromWei(getClaimable())} SPARTA`
+                        : !showUsd
+                        ? `~${formatFromWei(getClaimable())} SPARTA`
+                        : `~$${formatFromWei(
+                            getClaimable().times(spartaPrice),
+                          )} in SPARTA`
                       : t('incentivesDisabled')}
                   </Col>
                 </Row>

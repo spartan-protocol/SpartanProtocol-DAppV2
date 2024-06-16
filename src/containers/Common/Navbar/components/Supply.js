@@ -48,12 +48,10 @@ const Supply = () => {
   const [spartaPrice, setspartaPrice] = useState(0)
 
   useEffect(() => {
-    if (web3.spartaPrice > 0) {
-      setspartaPrice(web3.spartaPrice)
-    } else if (web3.spartaPriceInternal > 0) {
+    if (web3.spartaPriceInternal > 0) {
       setspartaPrice(web3.spartaPriceInternal)
     }
-  }, [web3.spartaPrice, web3.spartaPriceInternal])
+  }, [web3.spartaPriceInternal])
 
   const getTVL = () => {
     let tvl = BN(0)
@@ -320,29 +318,6 @@ const Supply = () => {
               <Row>
                 <Col xs="12">
                   <hr />
-                </Col>
-                <Col xs="6" className="popover-text mb-2">
-                  {t('spartaPrice')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={
-                      <Popover>
-                        <Popover.Body className="text-center">
-                          {t('spartaPriceCoinGeckoInfo')}
-                        </Popover.Body>
-                      </Popover>
-                    }
-                  >
-                    <span role="button">
-                      <Icon icon="coinGeckoIcon" className="ms-1" size="15" />
-                    </span>
-                  </OverlayTrigger>
-                </Col>
-                <Col xs="6" className="popover-text text-end mb-2">
-                  {web3.spartaPrice > 0
-                    ? `$${formatFromUnits(web3.spartaPrice, 6)}`
-                    : 'Loading...'}
-                  <Spacer className="ms-1" size="15" />
                 </Col>
                 <Col xs="6" className="popover-text mb-2">
                   {t('spartaPrice')}

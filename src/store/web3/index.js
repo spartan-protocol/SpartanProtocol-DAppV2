@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import axios from 'axios'
 import { bsc, bscTestnet } from 'viem/chains'
 import { createPublicClient, http } from 'viem'
 
@@ -35,7 +34,6 @@ export const web3Slice = createSlice({
     allowance1: {},
     allowance2: {},
     watchingAsset: false,
-    spartaPrice: 0,
     spartaPriceInternal: 0,
     eventArray: {},
     rpcs: false,
@@ -66,9 +64,6 @@ export const web3Slice = createSlice({
     updateWatchingAsset: (state, action) => {
       state.watchingAsset = action.payload
     },
-    updateSpartaPrice: (state, action) => {
-      state.spartaPrice = action.payload
-    },
     updateSpartaPriceInternal: (state, action) => {
       state.spartaPriceInternal = action.payload
     },
@@ -93,7 +88,6 @@ export const {
   updateAllowance1,
   updateAllowance2,
   updateWatchingAsset,
-  updateSpartaPrice,
   updateSpartaPriceInternal,
   updateEventArray,
   updateRpcs,
@@ -285,23 +279,6 @@ export const watchAsset =
     }
     dispatch(updateLoading(false))
   }
-
-/**
- * Get price of SPARTA token via coinGecko API
- * @returns {uint} spartaPrice
- */
-export const getSpartaPrice = () => async (dispatch) => {
-  dispatch(updateLoading(true))
-  try {
-    const spartaPrice = await axios.get(
-      'https://api.coingecko.com/api/v3/simple/price?ids=spartan-protocol-token&vs_currencies=usd',
-    )
-    dispatch(updateSpartaPrice(spartaPrice.data['spartan-protocol-token'].usd))
-  } catch (error) {
-    dispatch(updateError(`ERR10 ${error.reason ?? error.message ?? error}`))
-  }
-  dispatch(updateLoading(false))
-}
 
 /**
  * Get price of SPARTA token via deepest stablecoin pools (internally derived price)

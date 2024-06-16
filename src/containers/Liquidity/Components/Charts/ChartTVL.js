@@ -18,9 +18,7 @@
 //       tvl = tvl.plus(props.poolItem.baseAmount).times(2)
 //     }
 //     if (tvl > 0) {
-//       return tvl.times(
-//         web3.spartaPrice > 0 ? web3.spartaPrice : web3.spartaPriceInternal,
-//       )
+//       return tvl.times(web3.spartaPriceInternal)
 //     }
 //     return '0.00'
 //   }
