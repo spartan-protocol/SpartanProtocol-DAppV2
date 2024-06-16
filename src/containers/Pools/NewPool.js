@@ -103,9 +103,7 @@ const NewPool = ({ setShowModal, showModal }) => {
     setPriceInToken(tokenPrice)
 
     let usdPrice = BN(spartaInput?.value).div(tokenInput?.value)
-    usdPrice = usdPrice.times(
-      web3.spartaPrice > 0 ? web3.spartaPrice : web3.spartaPriceInternal,
-    )
+    usdPrice = usdPrice.times(web3.spartaPriceInternal)
     if (usdPrice > 10) {
       usdPrice = formatFromUnits(usdPrice, 2)
     }

@@ -37,12 +37,10 @@ const SynthItem = ({ asset }) => {
   const synthURTooltip = Tooltip(t, 'synthUR')
 
   useEffect(() => {
-    if (web3.spartaPrice > 0) {
-      setspartaPrice(web3.spartaPrice)
-    } else if (web3.spartaPriceInternal > 0) {
+    if (web3.spartaPriceInternal > 0) {
       setspartaPrice(web3.spartaPriceInternal)
     }
-  }, [web3.spartaPrice, web3.spartaPriceInternal])
+  }, [web3.spartaPriceInternal])
 
   const _getSynth = () => getSynth(tokenAddress, synth.synthDetails)
   // const getSynthCap = () => BN(tokenAmount).times(asset.synthCapBPs).div(10000)

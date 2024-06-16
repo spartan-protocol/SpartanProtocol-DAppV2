@@ -14,12 +14,10 @@
 //   const [spartaPrice, setspartaPrice] = useState(0)
 
 //   useEffect(() => {
-//     if (web3.spartaPrice > 0) {
-//       setspartaPrice(web3.spartaPrice)
-//     } else if (web3.spartaPriceInternal > 0) {
+//     if (web3.spartaPriceInternal > 0) {
 //       setspartaPrice(web3.spartaPriceInternal)
 //     }
-//   }, [web3.spartaPrice, web3.spartaPriceInternal])
+//   }, [web3.spartaPriceInternal])
 
 //   const getTVL = (USD) => {
 //     let tvl = BN(0)

@@ -42,14 +42,6 @@ export const getExplorerTxn = (txnHash) => {
   return link
 }
 
-// GET CURRENT USD PRICE OF SPARTA TOKEN
-export const getPriceSparta = async () => {
-  const resp = await axios.get(
-    'https://api.coingecko.com/api/v3/simple/price?ids=spartan-protocol-token&vs_currencies=usd',
-  )
-  return resp.data['spartan-protocol-token'].usd
-}
-
 // GET CURRENT USD PRICE OF A TOKEN (BY COINGECKO ID)
 export const getPriceByID = async (ID) => {
   const resp = await axios.get(

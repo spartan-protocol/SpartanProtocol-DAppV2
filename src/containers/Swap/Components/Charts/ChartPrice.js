@@ -26,7 +26,7 @@ const ChartPrice = (props) => {
       data1.push(metrics[i].tokenPrice)
       labels.push(formatDate(metrics[i].timestamp))
     }
-    if (web3.spartaPrice > 0 || web3.spartaPriceInternal > 0) {
+    if (web3.spartaPriceInternal > 0) {
       data1.push(props.tokenPrice)
       labels.push('Current')
     }

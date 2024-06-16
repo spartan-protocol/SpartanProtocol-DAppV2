@@ -21,7 +21,6 @@ import {
 import { useSynth, updateTxn as updateTxnSynth } from '../../../store/synth'
 import {
   getRPCBlocks,
-  getSpartaPrice,
   useWeb3,
   // getGlobalMetrics,
   updateTxn as updateTxnWeb3,
@@ -66,17 +65,6 @@ const DataManager = () => {
       dispatch(getReservePOLDetails()) // RESERVE POL DETAILS
     }
   }, [dispatch, web3.rpcs, app.chainId, address])
-
-  /** Check SPARTA token price */
-  useEffect(() => {
-    dispatch(getSpartaPrice()) // Run on load
-    const interval = setInterval(() => {
-      dispatch(getSpartaPrice()) // Run on interval
-    }, 20000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [dispatch])
 
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {
