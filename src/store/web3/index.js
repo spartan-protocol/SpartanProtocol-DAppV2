@@ -288,7 +288,7 @@ export const getSpartaPriceInternal = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { poolDetails } = getState().pool
   if (poolDetails.length > 0) {
-    const minAmount = 25000 // 25,000 stablecoin units min (ie ~$50k TVL min)
+    const minAmount = 50 // 50 stablecoin units min (ie $100 TVL min)
     try {
       const _pools = []
       for (let i = 0; i < stablecoinPools.length; i += 1) {
