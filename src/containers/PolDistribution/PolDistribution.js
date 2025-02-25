@@ -30,10 +30,9 @@ export const PolDistribution = () => {
       </p>
 
       <p>
-        Keep in mind that only the top 100 wallets are included. If you had less
-        than ~50K combined SPARTA value in your wallet, curated pools, or the
-        DaoVault you are likely to not be included (thats roughly the cutoff for
-        top 100)
+        Keep in mind if you had less than ~50K combined SPARTA value in your
+        wallet, curated pools, or the DaoVault you are likely to not be included
+        (thats roughly the cutoff for top 100)
       </p>
 
       <input
