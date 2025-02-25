@@ -6,10 +6,10 @@ import Swap from './containers/Swap'
 import Synths from './containers/Synths'
 import Vaults from './containers/Vaults'
 import Dao from './containers/Dao'
-import Upgrade from './containers/Upgrade'
 import PU from './containers/PU'
 import Friends from './containers/Friends'
 import Contracts from './containers/Contracts'
+import { PolDistribution } from './containers/PolDistribution/PolDistribution'
 
 export const routes = [
   {
@@ -61,10 +61,10 @@ export const routes = [
   },
 
   {
-    path: 'upgrade',
-    name: 'upgrade',
+    path: 'polDistribution',
+    name: 'POL Distribution',
     icon: 'upgrade',
-    component: <Upgrade />,
+    component: <PolDistribution />,
     layout: '',
   },
 
