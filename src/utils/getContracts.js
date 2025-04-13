@@ -372,3 +372,20 @@ export const getSSUtilsContract = (wallet, rpcUrls) => {
   }
   return contract
 }
+
+/** Get the POL distribution contract with signer/provider injected
+ * @returns {uint} contract
+ */
+export const getPolDistroContract = (wallet, rpcUrls) => {
+  let contract = isAddress(getAddresses().polDistribution)
+  const abiPolDistro = getAbis().polDistribution
+  const provider = getWalletProvider(wallet ?? null, rpcUrls)
+  if (contract === true) {
+    contract = getContract({
+      abi: abiPolDistro,
+      address: getAddresses().polDistribution,
+      ...getClient(provider),
+    })
+  }
+  return contract
+}

@@ -19,6 +19,7 @@ import abiTnSynthFactory from '../ABI/TN/SynthFactory.json'
 import abiTnSynthVault from '../ABI/TN/SynthVault.json'
 import abiTnUtils from '../ABI/TN/Utils.json'
 import abiTnWbnb from '../ABI/TN/WBNB.json'
+import abiTnPolDistro from '../ABI/TN/PolDistro.json'
 
 // Mainnet ABI Imports
 import abiMnBondVault from '../ABI/MN/BondVault.json'
@@ -37,6 +38,8 @@ import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnSynthVault from '../ABI/MN/SynthVault.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
+import abiMnPolDistro from '../ABI/MN/PolDistro.json'
+
 import { BN } from './bigNumber'
 
 export const abisTN = {
@@ -56,6 +59,7 @@ export const abisTN = {
   synthVault: abiTnSynthVault.abi,
   utils: abiTnUtils.abi,
   wbnb: abiTnWbnb.abi,
+  polDistribution: abiTnPolDistro.abi,
 }
 
 export const abisMN = {
@@ -75,6 +79,7 @@ export const abisMN = {
   synthVault: abiMnSynthVault.abi,
   utils: abiMnUtils.abi,
   wbnb: abiMnWbnb.abi,
+  polDistribution: abiMnPolDistro.abi,
 }
 
 // ADDRESSES FOR TESTS (UPDATE WHENEVER TESTS POINT SOMEWHERE ELSE)
@@ -135,6 +140,8 @@ export const addressesTN = {
   spartav1: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
   spartav2: '0xd055ADFdD53963F578A929eaA440DBED95407472',
   busdp: '0xd861414a977a25CbeDcb7167A171c0d129Ca55ba',
+  // Pol distribution controller contract
+  polDistribution: '0xCFf98e236F5366Ce1e93e8f941D56024e0992DfC',
 }
 
 // List of BSC Mainnet Addresses
@@ -184,6 +191,8 @@ export const addressesMN = {
   spartav1: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
   spartav2: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
   busdp: '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c',
+  // Pol distribution controller contract
+  polDistribution: '',
 }
 
 export const bscRpcsTN = [
