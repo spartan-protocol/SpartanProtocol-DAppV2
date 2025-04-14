@@ -1,5 +1,5 @@
 import { createPublicClient, getContract, http, isAddress } from 'viem'
-import { bsc } from 'viem/chains'
+import { bsc, bscTestnet } from 'viem/chains'
 
 import { getAbis, getAddresses, getWalletProvider } from './web3'
 
@@ -376,7 +376,7 @@ export const getSSUtilsContract = (wallet, rpcUrls) => {
 /** Get the POL distribution contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getPolDistroContract = (wallet, rpcUrls) => {
+export const getPolDistroContract = (wallet, rpcUrls, chainId) => {
   let contract = isAddress(getAddresses().polDistribution)
   const abiPolDistro = getAbis().polDistribution
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
@@ -384,6 +384,7 @@ export const getPolDistroContract = (wallet, rpcUrls) => {
     contract = getContract({
       abi: abiPolDistro,
       address: getAddresses().polDistribution,
+      chain: chainId === 97 ? bscTestnet : bsc,
       ...getClient(provider),
     })
   }

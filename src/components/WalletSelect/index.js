@@ -141,7 +141,7 @@ const WalletSelect = (props) => {
       window.localStorage.removeItem('lastWallet')
       if (x.id === 'BW') {
         await dispatch(addNetworkBC())
-      } else if (['MM', 'BRAVE', 'TW'].includes(x.id)) {
+      } else {
         await dispatch(addNetworkMM())
       }
       if (address) {

@@ -8,7 +8,7 @@ import { merkleInfo } from './merkleInfo'
 export const PolDistribution = () => {
   const { address } = useAccount()
   const { chainId } = useApp()
-  const { data: walletClient } = useWalletClient()
+  const { data: walletClient } = useWalletClient(chainId)
 
   const [checkAddress, setCheckAddress] = useState('')
   const [checkUsdtAllocation, setCheckUsdtAllocation] = useState(null)
@@ -67,7 +67,11 @@ export const PolDistribution = () => {
   }, [address, chainId])
 
   const handleClaimPolAllocation = () => {
-    const polDistroContract = getPolDistroContract(walletClient)
+    const polDistroContract = getPolDistroContract(
+      walletClient,
+      undefined,
+      chainId,
+    )
     if (polDistroContract) {
       polDistroContract.write
         .claim([
