@@ -18,7 +18,7 @@ export const PolDistribution = () => {
     if (allocation) {
       setCheckUsdtAllocation(`Wallet has ${allocation} USDT allocation`)
     } else {
-      setCheckUsdtAllocation(`Wallet not found in the top 100`)
+      setCheckUsdtAllocation(`Wallet not found in the snapshot`)
     }
   }
 
@@ -32,6 +32,7 @@ export const PolDistribution = () => {
     proof: null,
   })
   const [claimCutoffTimestamp, setClaimCutoffTimestamp] = useState(null)
+  const [connectedHasClaimed, setConnectedHasClaimed] = useState(false)
 
   useEffect(() => {
     const polDistroContract = getPolDistroContract()
@@ -65,6 +66,22 @@ export const PolDistribution = () => {
       })
     }
   }, [address, chainId])
+
+  useEffect(() => {
+    if (connectedMerkleInfo) {
+      const polDistroContract = getPolDistroContract()
+      if (polDistroContract) {
+        polDistroContract.read
+          .isClaimed([connectedMerkleInfo.index])
+          .then((claimed) => {
+            setConnectedHasClaimed(claimed)
+          })
+          .catch((error) => {
+            console.error('Error checking claim status:', error)
+          })
+      }
+    }
+  }, [connectedMerkleInfo, chainId])
 
   const handleClaimPolAllocation = () => {
     const polDistroContract = getPolDistroContract(
@@ -103,8 +120,8 @@ export const PolDistribution = () => {
         </p>
         <p>
           Keep in mind if you had less than ~50K combined SPARTA value in your
-          wallet, curated pools, or the DaoVault you are likely to not be
-          included (thats roughly equal to 100 wallets being included).
+          wallet, curated pools, or the DaoVault you are not likely to be
+          included.
         </p>
         <input
           type="text"
@@ -136,7 +153,9 @@ export const PolDistribution = () => {
               <div>
                 <div>Claim amount: {connectedMerkleInfo.amount} USDT</div>
                 <div>Claim index: {connectedMerkleInfo.index}</div>
-                <div>Claim proof: {connectedMerkleInfo.proof}</div>
+                <div style={{ overflowWrap: 'anywhere' }}>
+                  Claim proof: {connectedMerkleInfo.proof}
+                </div>
               </div>
             )}
             <div>Claim cutoff timestamp: {claimCutoffTimestamp} UTC</div>
@@ -147,10 +166,18 @@ export const PolDistribution = () => {
             <button
               type="button"
               onClick={handleClaimPolAllocation}
-              disabled={!connectedMerkleInfo.proof}
+              disabled={!connectedMerkleInfo.proof || connectedHasClaimed}
             >
               Claim POL allocation
             </button>
+            {connectedHasClaimed && (
+              <div>
+                <strong>
+                  🥳Connected wallet has already claimed its POL distro
+                  allocation!
+                </strong>
+              </div>
+            )}
           </div>
         </>
       )}

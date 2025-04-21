@@ -141,7 +141,7 @@ export const addressesTN = {
   spartav2: '0xd055ADFdD53963F578A929eaA440DBED95407472',
   busdp: '0xd861414a977a25CbeDcb7167A171c0d129Ca55ba',
   // Pol distribution controller contract
-  polDistribution: '0x36716a83aE30103FAB6d22622BA612A37984C849',
+  polDistribution: '0x9Bd3165c20d2e2F28e5EA008CC2D426E0E8d2398',
 }
 
 // List of BSC Mainnet Addresses
