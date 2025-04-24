@@ -71,6 +71,12 @@ export const PolDistribution = () => {
         amount: _merkleInfo?.amount ?? null,
         proof: _merkleInfo?.proof ?? null,
       })
+    } else {
+      setConnectedMerkleInfo({
+        index: null,
+        amount: null,
+        proof: null,
+      })
     }
   }, [address, chainId])
 
@@ -87,6 +93,8 @@ export const PolDistribution = () => {
             console.error('Error checking claim status:', error)
           })
       }
+    } else {
+      setConnectedHasClaimed(false)
     }
   }, [connectedMerkleInfo, chainId, rpcs])
 
