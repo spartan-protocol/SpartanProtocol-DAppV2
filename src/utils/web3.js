@@ -192,7 +192,7 @@ export const addressesMN = {
   spartav2: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
   busdp: '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c',
   // Pol distribution controller contract
-  polDistribution: '',
+  polDistribution: '0xe79A479Ca85c73D688065476Ac07436fFd025EE9',
 }
 
 export const bscRpcsTN = [
