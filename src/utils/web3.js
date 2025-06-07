@@ -141,7 +141,8 @@ export const addressesTN = {
   spartav2: '0xd055ADFdD53963F578A929eaA440DBED95407472',
   busdp: '0xd861414a977a25CbeDcb7167A171c0d129Ca55ba',
   // Pol distribution controller contract
-  polDistribution: '0x9Bd3165c20d2e2F28e5EA008CC2D426E0E8d2398',
+  // polDistribution: '0x9Bd3165c20d2e2F28e5EA008CC2D426E0E8d2398', // (1st distro round)
+  polDistribution: '0x1A6F3Fb866de1fe3bdF1ce3f0867F4F35Cb9B465', // (2nd distro round)
 }
 
 // List of BSC Mainnet Addresses
@@ -192,7 +193,8 @@ export const addressesMN = {
   spartav2: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
   busdp: '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c',
   // Pol distribution controller contract
-  polDistribution: '0xe79A479Ca85c73D688065476Ac07436fFd025EE9',
+  // polDistribution: '0xe79A479Ca85c73D688065476Ac07436fFd025EE9', // (1st distro round)
+  polDistribution: '0x47b198935979f0d914061559436423d06982CBD6', // (2nd distro round)
 }
 
 export const bscRpcsTN = [
