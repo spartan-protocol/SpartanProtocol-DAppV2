@@ -15,6 +15,3 @@ jobs:
         run: yarn lint
       - name: Build
         run: yarn build
-        env:
-          REACT_APP_BITQUERY: ${{ secrets.REACT_APP_BITQUERY }}
-          REACT_APP_GETBLOCK: ${{ secrets.REACT_APP_GETBLOCK }}

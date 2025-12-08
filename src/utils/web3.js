@@ -225,10 +225,6 @@ export const bscRpcsMN = [
   'https://rpc.ankr.com/bsc',
   'https://bscrpc.com',
   'https://binance.nodereal.io',
-  // ENV conditionals - Make sure conditional RPCs are not the first index of this array
-  // process.env.NODE_ENV === 'production'
-  //   ? 'https://bsc-mainnet.nodereal.io/v1/cf893e692ffa45098367d6c47fb3ff11' // Permissioned to the SP domain (whitelist)
-  //   : process.env.REACT_APP_NODEREAL_PRIVATE,
 ]
 
 export const stablecoinPools = [

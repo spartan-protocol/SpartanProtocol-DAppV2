@@ -1,4 +1,4 @@
-import { createPublicClient, getContract, http, isAddress } from 'viem'
+import { getContract, isAddress } from 'viem'
 import { bsc, bscTestnet } from 'viem/chains'
 
 import { getAbis, getAddresses, getWalletProvider } from './web3'
@@ -236,29 +236,6 @@ export const getSpartaV2Contract = (wallet, rpcUrls) => {
       abi: abiSparta,
       address: getAddresses().spartav2,
       ...getClient(provider),
-    })
-  }
-  return contract
-}
-
-/**
- * Get the current base/SPARTA contract with API provider injected
- * @returns {uint} contract
- */
-export const getSpartaV2API = () => {
-  let contract = isAddress(getAddresses().spartav2)
-  const abiSparta = getAbis().sparta
-  const client = createPublicClient({
-    chain: bsc,
-    transport: http(
-      `https://bsc.getblock.io/?api_key=${process.env.REACT_APP_GETBLOCK}`,
-    ),
-  })
-  if (contract === true) {
-    contract = getContract({
-      abi: abiSparta,
-      address: getAddresses().spartav2,
-      publicClient: client,
     })
   }
   return contract

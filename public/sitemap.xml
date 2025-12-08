@@ -15,9 +15,6 @@
     <loc>https://dapp.spartanprotocol.org/swap</loc>
   </url>
   <url>
-    <loc>https://dapp.spartanprotocol.org/synths</loc>
-  </url>
-  <url>
     <loc>https://dapp.spartanprotocol.org/vaults</loc>
   </url>
   <url>
@@ -27,9 +24,6 @@
     <loc>https://dapp.spartanprotocol.org/upgrade</loc>
   </url>
   <url>
-    <loc>https://dapp.spartanprotocol.org/donate</loc>
-  </url>
-    <url>
     <loc>https://dapp.spartanprotocol.org/friends</loc>
   </url>
 </urlset>
