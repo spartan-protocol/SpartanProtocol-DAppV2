@@ -39,7 +39,7 @@
     "viem": "^1.21.0",
     "wagmi": "^1.4.12",
     "web-vitals": "2.1.4",
-    "webpack": "^5.94.0",
+    "webpack": "^5.104.1",
     "yarn": "1.22.18"
   },
   "scripts": {
